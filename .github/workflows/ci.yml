@@ -14,9 +14,9 @@ jobs:
       matrix:
         service:
           - medicamentos
-          - monitoreo
           - gateway
-          # agregar aquí cada nuevo microservicio
+          # agregar aquí cada nuevo microservicio SOLO cuando ya exista
+          # su carpeta en services/, si no, el CI falla
 
     defaults:
       run:
