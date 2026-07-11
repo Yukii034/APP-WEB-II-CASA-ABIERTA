@@ -15,6 +15,7 @@ jobs:
         service:
           - medicamentos
           - gateway
+          - informacion-salud
           # agregar aquí cada nuevo microservicio SOLO cuando ya exista
           # su carpeta en services/, si no, el CI falla
 
