@@ -1,0 +1,19 @@
+services:
+  medicamentos:
+    build: ./services/medicamentos
+    ports:
+      - "8081:8080"
+    networks:
+      - cuidabien-net
+
+  gateway:
+    build: ./services/gateway
+    ports:
+      - "8080:8080"
+    depends_on:
+      - medicamentos
+    networks:
+      - cuidabien-net
+
+networks:
+  cuidabien-net:
