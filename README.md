@@ -56,7 +56,7 @@ Esto levanta todos los servicios definidos en `docker-compose.yml`. El gateway q
 3. **Reemplazar la lógica de ejemplo** en `main.go` (el struct `Item` y el handler `itemsHandler`) por la lógica real de tu servicio. **No elimines el endpoint `/health`**, es usado para verificar que el servicio esté vivo.
 
 4. **Agregar tu servicio al `docker-compose.yml`** de la raíz, copiando el bloque de `medicamentos` como referencia:
-   ```yaml
+```yaml
    nombre-de-tu-servicio:
      build: ./services/nombre-de-tu-servicio
      environment:
@@ -65,13 +65,18 @@ Esto levanta todos los servicios definidos en `docker-compose.yml`. El gateway q
        - cuidabien-net
      ports:
        - "808X:8080"   # asignar un puerto libre, ver tabla abajo
-   ```
+```
 
-5. **Si tu servicio necesita datos de otro**, sigue el patrón usado en `services/gateway/main.go` (función `medicamentosHandler`): leer la URL desde una variable de entorno con `os.Getenv()` y hacer un `http.Get()`.
+5. **Agregar tu servicio a la matrix del CI**, en `.github/workflows/ci.yml`:
+```yaml
+   service:
+     - medicamentos
+     - gateway
+     - nombre-de-tu-servicio   # agregar aquí
+```
+   ⚠️ **Importante:** solo agrégalo aquí cuando la carpeta de tu servicio ya exista en el repo con su `main.go`, `go.mod` y `Dockerfile` funcionando. Si agregas el nombre antes de crear la carpeta, el CI va a fallar porque no encuentra la ruta.
 
-6. **Si el Gateway debe exponer tu servicio al frontend**, agrega:
-   - Un nuevo handler en `services/gateway/main.go`, copiando el patrón existente.
-   - La variable `_URL` correspondiente en el bloque `environment` del `gateway` en `docker-compose.yml`.
+6. **Si tu servicio necesita datos de otro**, sigue el patrón usado en `services/gateway/main.go`...
 
 7. **Completar el `README.md`** dentro de tu carpeta de servicio con: qué hace, endpoints disponibles, puerto y variables de entorno.
 
