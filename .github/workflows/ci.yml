@@ -14,8 +14,6 @@ jobs:
       matrix:
         service:
           - medicamentos
-          - emergencia
-          - monitoreo
           - gateway
           # agregar aquí cada nuevo microservicio
 

@@ -1,0 +1,41 @@
+# Binarios compilados
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+servicio
+
+# Carpetas de build/salida
+/bin/
+/dist/
+
+# Dependencias de Go
+vendor/
+
+# Archivos de test y cobertura
+*.test
+*.out
+coverage.html
+
+# Variables de entorno (nunca se suben, cada quien tiene el suyo local)
+.env
+.env.local
+*.env
+
+# Editores / IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Docker
+docker-compose.override.yml
+
+# Logs
+*.log
