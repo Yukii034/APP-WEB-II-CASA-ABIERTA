@@ -128,7 +128,7 @@ cuidabien/
 
 | Servicio | Responsable(s) |
 |----------|----------------|
-| Gateway / base del repo | [tu nombre] |
+| Gateway / base del repo | [Pierina Peñaherrera] |
 | Medicamentos | [nombre] |
 | Emergencia | [nombre] |
 | ... | ... |
