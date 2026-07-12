@@ -13,7 +13,7 @@ services:
       - "8081:8080"
 
   alimentacion:
-    build: ./services/medicamentos
+    build: ./services/alimentacion
     environment:
       - PORT=8080
     networks:
