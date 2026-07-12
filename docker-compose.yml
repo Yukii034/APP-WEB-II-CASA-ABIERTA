@@ -12,6 +12,17 @@ services:
     ports:
       - "8081:8080"
 
+  alimentacion:
+    build: ./services/medicamentos
+    environment:
+      - PORT=8080
+    networks:
+      - cuidabien-net
+    # No necesita "ports" hacia afuera si solo lo usa el gateway,
+    # pero lo dejamos expuesto para poder probarlo directo mientras desarrollan
+    ports:
+      - "8084:8080"
+
   gateway:
     build: ./services/gateway
     environment:
