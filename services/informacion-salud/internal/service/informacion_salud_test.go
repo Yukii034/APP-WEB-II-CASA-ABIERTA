@@ -1,13 +1,15 @@
-package main
+package service
 
 import (
 	"testing"
 	"time"
+
+	"cuidabien/informacion-salud/internal/model"
 )
 
 func TestNuevoRegistroNormalizaListasNulas(t *testing.T) {
 	ahora := time.Date(2026, 7, 12, 10, 0, 0, 0, time.UTC)
-	entrada := entradaInformacionSalud{
+	entrada := model.EntradaInformacionSalud{
 		NombrePaciente: "María Pérez",
 		Diagnosticos:   []string{"hipertensión"},
 	}
@@ -32,7 +34,7 @@ func TestNuevoRegistroNormalizaListasNulas(t *testing.T) {
 }
 
 func TestActualizarRegistroMantieneCamposNoEnviados(t *testing.T) {
-	original := InformacionSalud{
+	original := model.InformacionSalud{
 		ID:                   "1",
 		NombrePaciente:       "María Pérez",
 		Diagnosticos:         []string{"hipertensión"},
@@ -43,7 +45,7 @@ func TestActualizarRegistroMantieneCamposNoEnviados(t *testing.T) {
 	}
 
 	// Solo se envía una actualización de alergias, el resto no debería borrarse.
-	entrada := entradaInformacionSalud{
+	entrada := model.EntradaInformacionSalud{
 		Alergias: []string{"penicilina", "aspirina"},
 	}
 	ahora := time.Date(2026, 7, 12, 11, 0, 0, 0, time.UTC)
@@ -72,4 +74,59 @@ func TestNormalizarConvierteNilEnListaVacia(t *testing.T) {
 	if len(resultado) != 0 {
 		t.Errorf("esperaba lista vacía, obtuve %v", resultado)
 	}
+}
+
+func TestServiceCrearYObtener(t *testing.T) {
+	svc := NuevoInformacionSaludService(&repositorioFake{registros: map[string]model.InformacionSalud{}})
+
+	creado := svc.Crear(model.EntradaInformacionSalud{NombrePaciente: "Juan"})
+	if creado.ID == "" {
+		t.Fatal("esperaba que Crear asigne un id")
+	}
+
+	obtenido, ok := svc.Obtener(creado.ID)
+	if !ok {
+		t.Fatal("esperaba encontrar el registro recién creado")
+	}
+	if obtenido.NombrePaciente != "Juan" {
+		t.Errorf("esperaba nombre 'Juan', obtuve %s", obtenido.NombrePaciente)
+	}
+}
+
+func TestServiceActualizarIDInexistente(t *testing.T) {
+	svc := NuevoInformacionSaludService(&repositorioFake{registros: map[string]model.InformacionSalud{}})
+
+	_, ok := svc.Actualizar("no-existe", model.EntradaInformacionSalud{})
+	if ok {
+		t.Fatal("esperaba ok=false al actualizar un id que no existe")
+	}
+}
+
+// repositorioFake es un repository.Repository mínimo para probar el
+// service sin depender de la implementación en memoria real.
+type repositorioFake struct {
+	registros   map[string]model.InformacionSalud
+	siguienteID int
+}
+
+func (r *repositorioFake) Listar() []model.InformacionSalud {
+	resultado := make([]model.InformacionSalud, 0, len(r.registros))
+	for _, reg := range r.registros {
+		resultado = append(resultado, reg)
+	}
+	return resultado
+}
+
+func (r *repositorioFake) Obtener(id string) (model.InformacionSalud, bool) {
+	reg, ok := r.registros[id]
+	return reg, ok
+}
+
+func (r *repositorioFake) Guardar(registro model.InformacionSalud) {
+	r.registros[registro.ID] = registro
+}
+
+func (r *repositorioFake) SiguienteID() string {
+	r.siguienteID++
+	return "fake-" + string(rune('0'+r.siguienteID))
 }
