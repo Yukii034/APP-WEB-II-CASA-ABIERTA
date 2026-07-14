@@ -88,8 +88,9 @@ Esto levanta todos los servicios definidos en `docker-compose.yml`. El gateway q
 |---------------|-------------|--------|
 | gateway       | 8080        | ✅ activo |
 | medicamentos  | 8081        | ✅ activo |
-| emergencia    | 8082        | pendiente |
+| informacion salud    | 8082        | ✅ activo |
 | monitoreo     | 8083        | pendiente |
+| alimentacion   | 8084        | ✅ activo |
 | citas médicas | 8085        | ✅ activo |
 | ...           | 808X        | agregar aquí al sumar un servicio |
 
@@ -135,7 +136,8 @@ cuidabien/
 | Servicio | Responsable(s) |
 |----------|----------------|
 | Gateway / base del repo | [Pierina Peñaherrera] |
-| Medicamentos | [nombre] |
+| Informacion de salud | [Nahim Simba] |
 | Emergencia | [nombre] |
+| Alimentos | [Eduardo Lopez, Pierina Peñaherrera, José Manuel Castillo, Néstor Gallegos] |
 | Citas médicas | [Deimuzh] |
 | ... | ... |
