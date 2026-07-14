@@ -11,6 +11,10 @@ import (
 func main() {
 	http.HandleFunc("/health", healthHandler)
 	http.HandleFunc("/api/medicamentos", medicamentosHandler)
+	http.HandleFunc("/api/appointments", citasHandler)
+	http.HandleFunc("/api/appointments/", citasHandler)
+	http.HandleFunc("/api/patients", citasHandler)
+	http.HandleFunc("/api/doctors", citasHandler)
 
 	port := os.Getenv("PORT")
 	if port == "" {
@@ -51,5 +55,45 @@ func medicamentosHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", "application/json")
+	w.Write(body)
+}
+
+// Proxy al microservicio de citas medicas.
+// Reenvia la peticion completa (metodo, body, path) al servicio de citas.
+func citasHandler(w http.ResponseWriter, r *http.Request) {
+	citasURL := os.Getenv("CITAS_URL")
+	if citasURL == "" {
+		http.Error(w, "CITAS_URL no configurada", http.StatusInternalServerError)
+		return
+	}
+
+	destino := citasURL + r.URL.Path
+	if r.URL.RawQuery != "" {
+		destino += "?" + r.URL.RawQuery
+	}
+
+	req, err := http.NewRequest(r.Method, destino, r.Body)
+	if err != nil {
+		http.Error(w, "Error al crear la peticion", http.StatusInternalServerError)
+		return
+	}
+	req.Header.Set("Content-Type", r.Header.Get("Content-Type"))
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		http.Error(w, "Error al contactar el servicio de citas", http.StatusBadGateway)
+		return
+	}
+	defer resp.Body.Close()
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		http.Error(w, "Error al leer la respuesta", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(resp.StatusCode)
 	w.Write(body)
 }
