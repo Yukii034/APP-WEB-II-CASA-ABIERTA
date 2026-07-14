@@ -23,16 +23,27 @@ services:
     ports:
       - "8084:8080"
 
+  estado-animo:
+    build: ./services/estado-animo
+    environment:
+      - PORT=8080
+    networks:
+      - cuidabien-net
+    ports:
+      - "8085:8080"  #se debe modificar el puerto 
+
+
   gateway:
     build: ./services/gateway
     environment:
       - PORT=8080
       - MEDICAMENTOS_URL=http://medicamentos:8080
-      # Aquí se van agregando las URLs de los demás servicios:
+      - ESTADO_ANIMO_URL=http://estado-animo:8080
       # - EMERGENCIA_URL=http://emergencia:8080
       # - MONITOREO_URL=http://monitoreo:8080
     depends_on:
       - medicamentos
+      - estado-animo
     networks:
       - cuidabien-net
     ports:
