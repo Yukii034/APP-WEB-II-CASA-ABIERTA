@@ -14,16 +14,30 @@ Puerto expuesto al host: **8084**
 
 ## Endpoints
 
-| Método | Ruta                        | Descripción                                                          |
-|--------|-----------------------------|------------------------------------------------------------------------|
-| GET    | /health                     | Verifica que el servicio esté vivo                                     |
-| GET    | /api/alimentacion           | Lista las comidas registradas hoy                                      |
-| POST   | /api/alimentacion           | Registra una comida. Body: `{"tipo_comida":"almuerzo","descripcion":"sopa"}` |
-| GET    | /api/alimentacion/resumen   | Estado de desayuno/almuerzo/cena de hoy y si alguna se saltó            |
-| POST   | /api/alimentacion/reset     | Borra los registros de hoy (solo para pruebas/demo)                    |
+| Método | Ruta                             | Descripción                                                                 |
+|--------|-----------------------------------|------------------------------------------------------------------------------|
+| GET    | /health                          | Verifica que el servicio esté vivo                                           |
+| GET    | /api/alimentacion                | Lista las comidas registradas hoy                                            |
+| POST   | /api/alimentacion                | Registra una comida. Body abajo                                              |
+| GET    | /api/alimentacion/resumen        | Estado de desayuno/almuerzo/cena de hoy, si alguna se saltó y nivel de alerta |
+| POST   | /api/alimentacion/reset          | Borra los registros y la hidratación de hoy (solo para pruebas/demo)         |
+| GET    | /api/alimentacion/historial      | Registros de los últimos N días. Query opcional `?dias=7` (por defecto 7)    |
+| GET    | /api/alimentacion/hidratacion    | Lista los registros de hidratación de hoy                                    |
+| POST   | /api/alimentacion/hidratacion    | Registra hidratación. Body: `{"cantidad":"1 vaso"}`                          |
+| GET    | /api/alimentacion/restricciones  | Lista las restricciones/alergias alimentarias registradas                    |
+| POST   | /api/alimentacion/restricciones  | Agrega una restricción. Body: `{"descripcion":"sin sal"}`                    |
 
 `tipo_comida` acepta: `desayuno`, `almuerzo`, `cena` (también se puede usar
 `merienda`, aunque no tiene hora límite configurada por defecto).
+
+### POST /api/alimentacion
+
+```json
+{
+  "tipo_comida": "almuerzo",
+  "descripcion": "sopa y pollo"
+}
+```
 
 ### Ejemplo de respuesta de `/api/alimentacion/resumen`
 
@@ -37,9 +51,13 @@ Puerto expuesto al host: **8084**
   "comidas_hechas": 1,
   "comidas_total": 3,
   "hay_saltadas": true,
-  "mensaje": "Hay una o más comidas que no se registraron a tiempo hoy."
+  "mensaje": "Hay una o más comidas que no se registraron a tiempo hoy.",
+  "nivel_alerta": "atencion"
 }
 ```
+
+`nivel_alerta` es `"ok"` si no hay comidas saltadas, `"atencion"` si hay
+exactamente una, y `"urgente"` si hay dos o más.
 
 ## Variables de entorno
 
