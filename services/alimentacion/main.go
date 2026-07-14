@@ -18,6 +18,19 @@ type RegistroComida struct {
 	Hora        time.Time `json:"hora"`
 }
 
+// RegistroHidratacion representa un registro de líquidos tomados.
+type RegistroHidratacion struct {
+	ID       string    `json:"id"`
+	Hora     time.Time `json:"hora"`
+	Cantidad string    `json:"cantidad,omitempty"` // ej. "1 vaso", "poco", opcional
+}
+
+// Restriccion representa una restricción o alergia alimentaria del adulto mayor.
+type Restriccion struct {
+	ID          string `json:"id"`
+	Descripcion string `json:"descripcion"` // ej. "sin sal", "diabético", "alergia a lácteos"
+}
+
 // EstadoComida indica si una comida del día ya se registró o si se saltó.
 type EstadoComida struct {
 	TipoComida string `json:"tipo_comida"`
@@ -34,6 +47,7 @@ type Resumen struct {
 	ComidasTotal  int            `json:"comidas_total"`
 	HaySaltadas   bool           `json:"hay_saltadas"`
 	Mensaje       string         `json:"mensaje,omitempty"`
+	NivelAlerta   string         `json:"nivel_alerta"` // "ok" | "atencion" | "urgente"
 }
 
 type comidaEsperada struct {
@@ -45,6 +59,14 @@ var (
 	mu          sync.Mutex
 	registros   []RegistroComida
 	siguienteID = 1
+
+	muHidratacion          sync.Mutex
+	registrosHidratacion   []RegistroHidratacion
+	siguienteIDHidratacion = 1
+
+	muRestricciones        sync.Mutex
+	restricciones          []Restriccion
+	siguienteIDRestriccion = 1
 
 	comidasEsperadas = []comidaEsperada{
 		{tipo: "desayuno", horaLimite: "10:00"},
@@ -68,6 +90,9 @@ func main() {
 	http.HandleFunc("/api/alimentacion", alimentacionHandler)
 	http.HandleFunc("/api/alimentacion/resumen", resumenHandler)
 	http.HandleFunc("/api/alimentacion/reset", resetHandler)
+	http.HandleFunc("/api/alimentacion/historial", historialHandler)
+	http.HandleFunc("/api/alimentacion/hidratacion", hidratacionHandler)
+	http.HandleFunc("/api/alimentacion/restricciones", restriccionesHandler)
 
 	port := os.Getenv("PORT")
 	if port == "" {
@@ -141,6 +166,10 @@ func resetHandler(w http.ResponseWriter, r *http.Request) {
 	registros = nil
 	mu.Unlock()
 
+	muHidratacion.Lock()
+	registrosHidratacion = nil
+	muHidratacion.Unlock()
+
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(map[string]string{"status": "reiniciado"})
 }
@@ -204,11 +233,153 @@ func calcularResumen(regs []RegistroComida, esperadas []comidaEsperada, ahora ti
 		mensaje = "Hay una o más comidas que no se registraron a tiempo hoy."
 	}
 
+	comidasSaltadas := 0
+	for _, c := range comidas {
+		if c.Saltada {
+			comidasSaltadas++
+		}
+	}
+	nivelAlerta := "ok"
+	if comidasSaltadas == 1 {
+		nivelAlerta = "atencion"
+	} else if comidasSaltadas >= 2 {
+		nivelAlerta = "urgente"
+	}
+
 	return Resumen{
 		Comidas:       comidas,
 		ComidasHechas: comidasHechas,
 		ComidasTotal:  len(esperadas),
 		HaySaltadas:   haySaltadas,
 		Mensaje:       mensaje,
+		NivelAlerta:   nivelAlerta,
+	}
+}
+
+// GET /api/alimentacion/historial?dias=7 -> registros de los últimos N días (por defecto 7)
+func historialHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		http.Error(w, "Método no permitido", http.StatusMethodNotAllowed)
+		return
+	}
+
+	dias := 7
+	if v := r.URL.Query().Get("dias"); v != "" {
+		if n, err := strconv.Atoi(v); err == nil && n > 0 {
+			dias = n
+		}
+	}
+
+	desde := time.Now().AddDate(0, 0, -dias)
+
+	mu.Lock()
+	var resultado []RegistroComida
+	for _, reg := range registros {
+		if reg.Hora.After(desde) {
+			resultado = append(resultado, reg)
+		}
+	}
+	mu.Unlock()
+
+	if resultado == nil {
+		resultado = []RegistroComida{}
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(resultado)
+}
+
+// GET /api/alimentacion/hidratacion -> lista los registros de hidratación de hoy
+// POST /api/alimentacion/hidratacion -> registra hidratación { "cantidad": "1 vaso" }
+func hidratacionHandler(w http.ResponseWriter, r *http.Request) {
+	switch r.Method {
+	case http.MethodGet:
+		hoy := time.Now().Format("2006-01-02")
+
+		muHidratacion.Lock()
+		var resultado []RegistroHidratacion
+		for _, reg := range registrosHidratacion {
+			if reg.Hora.Format("2006-01-02") == hoy {
+				resultado = append(resultado, reg)
+			}
+		}
+		muHidratacion.Unlock()
+
+		if resultado == nil {
+			resultado = []RegistroHidratacion{}
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(resultado)
+
+	case http.MethodPost:
+		var entrada struct {
+			Cantidad string `json:"cantidad"`
+		}
+		if err := json.NewDecoder(r.Body).Decode(&entrada); err != nil {
+			http.Error(w, "Body inválido, se espera {\"cantidad\": \"1 vaso\"}", http.StatusBadRequest)
+			return
+		}
+
+		muHidratacion.Lock()
+		nuevo := RegistroHidratacion{
+			ID:       strconv.Itoa(siguienteIDHidratacion),
+			Hora:     time.Now(),
+			Cantidad: entrada.Cantidad,
+		}
+		siguienteIDHidratacion++
+		registrosHidratacion = append(registrosHidratacion, nuevo)
+		muHidratacion.Unlock()
+
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusCreated)
+		json.NewEncoder(w).Encode(nuevo)
+
+	default:
+		http.Error(w, "Método no permitido", http.StatusMethodNotAllowed)
+	}
+}
+
+// GET /api/alimentacion/restricciones -> lista las restricciones/alergias registradas
+// POST /api/alimentacion/restricciones -> agrega una restricción { "descripcion": "sin sal" }
+func restriccionesHandler(w http.ResponseWriter, r *http.Request) {
+	switch r.Method {
+	case http.MethodGet:
+		muRestricciones.Lock()
+		resultado := make([]Restriccion, len(restricciones))
+		copy(resultado, restricciones)
+		muRestricciones.Unlock()
+
+		if resultado == nil {
+			resultado = []Restriccion{}
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(resultado)
+
+	case http.MethodPost:
+		var entrada struct {
+			Descripcion string `json:"descripcion"`
+		}
+		if err := json.NewDecoder(r.Body).Decode(&entrada); err != nil || entrada.Descripcion == "" {
+			http.Error(w, "Body inválido, se espera {\"descripcion\": \"sin sal\"}", http.StatusBadRequest)
+			return
+		}
+
+		muRestricciones.Lock()
+		nuevo := Restriccion{
+			ID:          strconv.Itoa(siguienteIDRestriccion),
+			Descripcion: entrada.Descripcion,
+		}
+		siguienteIDRestriccion++
+		restricciones = append(restricciones, nuevo)
+		muRestricciones.Unlock()
+
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusCreated)
+		json.NewEncoder(w).Encode(nuevo)
+
+	default:
+		http.Error(w, "Método no permitido", http.StatusMethodNotAllowed)
 	}
 }

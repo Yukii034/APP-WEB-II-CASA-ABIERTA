@@ -51,3 +51,30 @@ func TestResumenComidaRegistradaNoCuentaComoSaltada(t *testing.T) {
 		t.Errorf("esperaba 1 comida hecha, obtuve %d", r.ComidasHechas)
 	}
 }
+
+func TestNivelAlertaOkSinSaltadas(t *testing.T) {
+	ahora := time.Date(2026, 7, 12, 8, 0, 0, 0, time.Local)
+	r := calcularResumen([]RegistroComida{}, esperadas(), ahora)
+
+	if r.NivelAlerta != "ok" {
+		t.Errorf("esperaba nivel_alerta 'ok', obtuve %q", r.NivelAlerta)
+	}
+}
+
+func TestNivelAlertaAtencionConUnaSaltada(t *testing.T) {
+	ahora := time.Date(2026, 7, 12, 11, 0, 0, 0, time.Local)
+	r := calcularResumen([]RegistroComida{}, esperadas(), ahora)
+
+	if r.NivelAlerta != "atencion" {
+		t.Errorf("esperaba nivel_alerta 'atencion' con 1 comida saltada, obtuve %q", r.NivelAlerta)
+	}
+}
+
+func TestNivelAlertaUrgenteConDosSaltadas(t *testing.T) {
+	ahora := time.Date(2026, 7, 12, 16, 0, 0, 0, time.Local)
+	r := calcularResumen([]RegistroComida{}, esperadas(), ahora)
+
+	if r.NivelAlerta != "urgente" {
+		t.Errorf("esperaba nivel_alerta 'urgente' con 2 comidas saltadas, obtuve %q", r.NivelAlerta)
+	}
+}
