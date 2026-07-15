@@ -141,5 +141,5 @@ cuidabien/
 | Emergencia | [nombre] |
 | Alimentos | [Eduardo Lopez, Pierina Peñaherrera, José Manuel Castillo, Néstor Gallegos] |
 | Citas médicas | [Deimuzh] |
-| Reportes médicos | [Deimuzh] |
+| Reportes médicos | [Anthony Mendoza - Deimuz, Holguin Nathaly Jasmin, Cedeño Geovanny Alexander] |
 | ... | ... |
