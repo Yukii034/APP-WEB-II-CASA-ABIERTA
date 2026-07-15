@@ -14,6 +14,8 @@ func main() {
 	http.HandleFunc("/api/reportes-medicos/", reportesHandler)
 	http.HandleFunc("/api/cita-medica", citasHandler)
 	http.HandleFunc("/api/cita-medica/", citasHandler)
+	http.HandleFunc("/api/informacion-salud", informacionSaludHandler)
+	http.HandleFunc("/api/informacion-salud/", informacionSaludHandler)
 
 	port := os.Getenv("PORT")
 	if port == "" {
@@ -121,6 +123,46 @@ func reportesHandler(w http.ResponseWriter, r *http.Request) {
 	resp, err := client.Do(req)
 	if err != nil {
 		http.Error(w, "Error al contactar el servicio de reportes", http.StatusBadGateway)
+		return
+	}
+	defer resp.Body.Close()
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		http.Error(w, "Error al leer la respuesta", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(resp.StatusCode)
+	w.Write(body)
+}
+
+// Proxy al microservicio de información de salud.
+// Reenvia la peticion completa (metodo, body, path, query) al servicio.
+func informacionSaludHandler(w http.ResponseWriter, r *http.Request) {
+	informacionSaludURL := os.Getenv("INFORMACION_SALUD_URL")
+	if informacionSaludURL == "" {
+		http.Error(w, "INFORMACION_SALUD_URL no configurada", http.StatusInternalServerError)
+		return
+	}
+
+	destino := informacionSaludURL + r.URL.Path
+	if r.URL.RawQuery != "" {
+		destino += "?" + r.URL.RawQuery
+	}
+
+	req, err := http.NewRequest(r.Method, destino, r.Body)
+	if err != nil {
+		http.Error(w, "Error al crear la peticion", http.StatusInternalServerError)
+		return
+	}
+	req.Header.Set("Content-Type", r.Header.Get("Content-Type"))
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		http.Error(w, "Error al contactar el servicio de información de salud", http.StatusBadGateway)
 		return
 	}
 	defer resp.Body.Close()

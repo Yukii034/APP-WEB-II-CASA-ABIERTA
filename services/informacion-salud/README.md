@@ -1,13 +1,13 @@
-# Servicio: [nombre del servicio]
+# Servicio: [Informacion de Sauld]
 
 ## Responsable
-Equipo: [nombres]
+Equipo: [Nahim Simba, Jostin Alvarado, Daivelyn Pincay, Joseph Paredes, Cristina Cedeño]
 
 ## Qué hace este servicio
 Microservicio encargado de gestionar la información de salud del adulto mayor, almacenando datos como diagnósticos, alergias, enfermedades crónicas y antecedentes médicos. Proporciona una API REST para consultar y actualizar esta información, permitiendo que otros microservicios accedan a ella cuando sea necesario.
 
 ## Puerto
-Este servicio corre internamente en el puerto **8080** (dentro del contenedor).
+Este servicio corre internamente en el puerto **8082** (dentro del contenedor).
 Puerto expuesto al host: **8082**
 
 ## Endpoints

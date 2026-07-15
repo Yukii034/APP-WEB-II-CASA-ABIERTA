@@ -138,7 +138,7 @@ cuidabien/
 | Servicio | Responsable(s) |
 |----------|----------------|
 | Gateway / base del repo | [Pierina Peñaherrera] |
-| Informacion de salud | [Nahim Simba] |
+| Informacion de salud | [Nahim Simba, Jostin Alvarado, Daivelyn Pincay, Joseph Paredes, Cristina Cedeño] |
 | Emergencia | [nombre] |
 | Alimentos | [Eduardo Lopez, Pierina Peñaherrera, José Manuel Castillo, Néstor Gallegos] |
 | Reportes médicos | [Anthony Mendoza - Deimuz, Holguin Nathaly Jasmin, Cedeño Geovanny Alexander] |
