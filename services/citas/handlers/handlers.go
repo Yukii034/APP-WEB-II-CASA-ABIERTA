@@ -6,8 +6,10 @@ import (
 	"cuidabien/citas/storage"
 	"encoding/json"
 	"fmt"
+	"io"
 	"math"
 	"net/http"
+	"os"
 	"strings"
 	"time"
 )
@@ -208,6 +210,74 @@ func (h *Handlers) ObtenerCitaHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	writeJSON(w, http.StatusOK, cita)
+}
+
+func (h *Handlers) DetalleCitaHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		writeError(w, http.StatusMethodNotAllowed, "Metodo no permitido")
+		return
+	}
+
+	id := strings.TrimPrefix(r.URL.Path, "/api/cita-medica/")
+	id = strings.TrimSuffix(id, "/detalle")
+	if id == "" {
+		writeError(w, http.StatusBadRequest, "ID de cita requerido")
+		return
+	}
+
+	cita := h.Store.FindCitaByID(id)
+	if cita == nil {
+		writeError(w, http.StatusNotFound, "Cita no encontrada")
+		return
+	}
+
+	detalle := models.DetalleCita{
+		Cita:     *cita,
+		Paciente: h.Store.FindPacienteByID(cita.PacienteID),
+		Doctor:   h.Store.FindDoctorByID(cita.DoctorID),
+	}
+
+	infoID := storage.InformacionSaludIDPorPaciente(cita.PacienteID)
+	detalle.InformacionSaludID = infoID
+	if infoID == "" {
+		detalle.InformacionSaludAviso = "No existe mapeo hacia informacion-salud para este paciente"
+		writeJSON(w, http.StatusOK, detalle)
+		return
+	}
+
+	info, aviso := consultarInformacionSalud(infoID)
+	detalle.InformacionSalud = info
+	detalle.InformacionSaludAviso = aviso
+
+	writeJSON(w, http.StatusOK, detalle)
+}
+
+func consultarInformacionSalud(infoID string) (*models.InformacionSalud, string) {
+	baseURL := os.Getenv("INFORMACION_SALUD_URL")
+	if baseURL == "" {
+		return nil, "INFORMACION_SALUD_URL no configurada"
+	}
+
+	resp, err := http.Get(strings.TrimRight(baseURL, "/") + "/api/informacion-salud/" + infoID)
+	if err != nil {
+		return nil, "No se pudo contactar informacion-salud"
+	}
+	defer resp.Body.Close()
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, "No se pudo leer la respuesta de informacion-salud"
+	}
+	if resp.StatusCode != http.StatusOK {
+		return nil, fmt.Sprintf("informacion-salud respondio con estado %d", resp.StatusCode)
+	}
+
+	var info models.InformacionSalud
+	if err := json.Unmarshal(body, &info); err != nil {
+		return nil, "Respuesta invalida de informacion-salud"
+	}
+
+	return &info, ""
 }
 
 func (h *Handlers) ActualizarCitaHandler(w http.ResponseWriter, r *http.Request) {

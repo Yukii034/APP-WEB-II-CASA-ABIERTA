@@ -23,14 +23,54 @@ services:
     ports:
       - "8084:8080"
 
+  informacion-salud:
+    build: ./services/informacion-salud
+    environment:
+      - PORT=8082
+    networks:
+      - cuidabien-net
+    ports:
+      - "8082:8080"
+
   citas:
     build: ./services/citas
+    environment:
+      - PORT=8080
+      - INFORMACION_SALUD_URL=http://informacion-salud:8082
+    networks:
+      - cuidabien-net
+    depends_on:
+      - informacion-salud
+    ports:
+      - "8085:8080"
+
+  estado-animo:
+    build: ./services/estado-animo
     environment:
       - PORT=8080
     networks:
       - cuidabien-net
     ports:
-      - "8085:8080"
+      - "8087:8080"
+
+  reportes-medicos:
+    build: ./services/reportes-medicos
+    environment:
+      - PORT=8080
+      - CITAS_URL=http://citas:8080
+    networks:
+      - cuidabien-net
+    ports:
+      - "8086:8080"
+
+  contacto-emergencia:
+    build: ./services/contacto-emergencia
+    environment:
+      - PORT=8080
+    networks:
+      - cuidabien-net
+    ports:
+      - "8097:8080"
 
   gateway:
     build: ./services/gateway
@@ -38,12 +78,19 @@ services:
       - PORT=8080
       - MEDICAMENTOS_URL=http://medicamentos:8080
       - CITAS_URL=http://citas:8080
+      - CONTACTO_EMERGENCIA_URL=http://contacto-emergencia:8080
+      - ESTADO_ANIMO_URL=http://estado-animo:8080
+      - REPORTES_URL=http://reportes-medicos:8080
+      - INFORMACION_SALUD_URL=http://informacion-salud:8082
       # Aquí se van agregando las URLs de los demás servicios:
-      # - EMERGENCIA_URL=http://emergencia:8080
       # - MONITOREO_URL=http://monitoreo:8080
     depends_on:
       - medicamentos
+      - informacion-salud
       - citas
+      - contacto-emergencia
+      - estado-animo
+      - reportes-medicos
     networks:
       - cuidabien-net
     ports:
