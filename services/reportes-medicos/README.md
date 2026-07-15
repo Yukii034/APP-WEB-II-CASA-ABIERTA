@@ -21,10 +21,26 @@ Puerto expuesto al host: **8086**.
 | Metodo | Ruta | Descripcion |
 |--------|------|-------------|
 | GET | `/health` | Verifica que el servicio este vivo |
-| GET | `/api/reportes` | Lista reportes semanales simulados |
-| GET | `/api/reportes/semanal` | Lista reportes semanales simulados |
-| GET | `/api/reportes/resumen` | Muestra resumen general de reportes |
-| GET | `/api/reportes/paciente/{id}` | Consulta reporte por paciente |
+| GET | `/api/reportes-medicos` | Lista reportes semanales simulados |
+| GET | `/api/reportes-medicos/semanal` | Lista reportes semanales simulados |
+| GET | `/api/reportes-medicos/resumen` | Muestra resumen general de reportes |
+| GET | `/api/reportes-medicos/paciente/{id}` | Consulta reporte por paciente |
+
+## Estructura del servicio
+
+```txt
+services/reportes-medicos/
+├── main.go
+├── models/
+│   └── models.go
+├── storage/
+│   ├── storage.go
+│   └── storage_test.go
+├── handlers/
+│   └── handlers.go
+└── router/
+    └── router.go
+```
 
 ## Variables de entorno
 
