@@ -2,7 +2,13 @@
 
 ## Responsable
 
-Equipo: Deimuzh
+Equipo:
+
+- Anthony Mendoza - Deimuz
+- HOLGUIN NATHALY JASMIN
+- CEDEÑO GEOVANNY ALEXANDER
+
+Nota: el desarrollo fue colaborativo, pero el equipo centralizo los commits desde una sola computadora para evitar conflictos de ramas e integracion.
 
 ## Que hace este servicio
 
