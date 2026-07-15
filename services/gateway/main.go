@@ -15,8 +15,16 @@ func main() {
 	http.HandleFunc("/api/appointments/", proxyHandler("CITAS_URL"))
 	http.HandleFunc("/api/patients", proxyHandler("CITAS_URL"))
 	http.HandleFunc("/api/doctors", proxyHandler("CITAS_URL"))
-	http.HandleFunc("/api/reportes", multiProxyHandler([]string{"REPORTES_URL", "CITAS_URL", "MEDICAMENTOS_URL", "ALIMENTACION_URL"}))
+	http.HandleFunc("/api/cita-medica", proxyHandler("CITAS_URL"))
+	http.HandleFunc("/api/cita-medica/", proxyHandler("CITAS_URL"))
+	http.HandleFunc("/api/reportes", proxyHandler("REPORTES_URL"))
 	http.HandleFunc("/api/reportes/", proxyHandler("REPORTES_URL"))
+	http.HandleFunc("/api/reportes-medicos", proxyHandler("REPORTES_MEDICOS_URL"))
+	http.HandleFunc("/api/reportes-medicos/", proxyHandler("REPORTES_MEDICOS_URL"))
+	http.HandleFunc("/api/estado-animo", proxyHandler("ESTADO_ANIMO_URL"))
+	http.HandleFunc("/api/estado-animo/", proxyHandler("ESTADO_ANIMO_URL"))
+	http.HandleFunc("/api/informacion-salud", proxyHandler("INFORMACION_SALUD_URL"))
+	http.HandleFunc("/api/informacion-salud/", proxyHandler("INFORMACION_SALUD_URL"))
 
 	port := os.Getenv("PORT")
 	if port == "" {
@@ -70,46 +78,5 @@ func proxyHandler(envVar string) http.HandlerFunc {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(resp.StatusCode)
 		w.Write(body)
-	}
-}
-
-// Proxy multi-servicio: intenta cada servicio en orden, devuelve el primero que responda.
-func multiProxyHandler(envVars []string) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		for _, envVar := range envVars {
-			serviceURL := os.Getenv(envVar)
-			if serviceURL == "" {
-				continue
-			}
-
-			destino := serviceURL + r.URL.Path
-			if r.URL.RawQuery != "" {
-				destino += "?" + r.URL.RawQuery
-			}
-
-			req, err := http.NewRequest(r.Method, destino, r.Body)
-			if err != nil {
-				continue
-			}
-			req.Header.Set("Content-Type", r.Header.Get("Content-Type"))
-
-			client := &http.Client{}
-			resp, err := client.Do(req)
-			if err != nil {
-				continue
-			}
-			defer resp.Body.Close()
-
-			body, err := io.ReadAll(resp.Body)
-			if err != nil {
-				continue
-			}
-
-			w.Header().Set("Content-Type", "application/json")
-			w.WriteHeader(resp.StatusCode)
-			w.Write(body)
-			return
-		}
-		http.Error(w, "Ningun servicio disponible", http.StatusBadGateway)
 	}
 }

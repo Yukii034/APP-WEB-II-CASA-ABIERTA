@@ -92,7 +92,9 @@ Esto levanta todos los servicios definidos en `docker-compose.yml`. El gateway q
 | monitoreo     | 8083        | pendiente |
 | alimentacion   | 8084        | ✅ activo |
 | citas médicas | 8085        | ✅ activo |
-| ...           | 808X        | agregar aquí al sumar un servicio |
+| reportes médicos | 8086        | ✅ activo |
+| estado animo     | 8087 | ✅ activo |
+| reportes (equipo) | 8088 | ✅ activo |
 
 > Antes de asignarte un puerto, revisa esta tabla y actualízala en tu PR para evitar choques con otro equipo.
 
@@ -139,5 +141,7 @@ cuidabien/
 | Informacion de salud | [Nahim Simba] |
 | Emergencia | [nombre] |
 | Alimentos | [Eduardo Lopez, Pierina Peñaherrera, José Manuel Castillo, Néstor Gallegos] |
-| Citas médicas | [Deimuzh] |
+| Reportes médicos | [Anthony Mendoza - Deimuz, Holguin Nathaly Jasmin, Cedeño Geovanny Alexander] |
+| Citas médicas | [Anthony Mendoza - Deimuz, Holguin Nathaly Jasmin, Cedeño Geovanny Alexander] |
+| Estado animo |  [Danny Zambrano, Michael Cedeño] |
 | ... | ... |
