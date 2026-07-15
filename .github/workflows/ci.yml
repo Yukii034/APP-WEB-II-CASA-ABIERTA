@@ -19,11 +19,7 @@ jobs:
           - informacion-salud
           - estado-animo
           - citas
-<<<<<<< HEAD
-
-=======
           - reportes-medicos
->>>>>>> 8d29b6b48e7208680da514fa607d4257bdd9e0f6
           # agregar aquí cada nuevo microservicio SOLO cuando ya exista
           # su carpeta en services/, si no, el CI falla
 
