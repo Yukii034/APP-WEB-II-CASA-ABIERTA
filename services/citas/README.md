@@ -6,7 +6,7 @@ Equipo:
 
 - Anthony Mendoza - Deimuz
 - Holguin Nathaly Jasmin
-- Cedeño Geovanny Alexander
+- Cedeño Geovanny Alexander - alex167j
 
 Nota: el desarrollo fue colaborativo, pero el equipo centralizo los commits desde una sola computadora para evitar conflictos de ramas e integracion.
 
