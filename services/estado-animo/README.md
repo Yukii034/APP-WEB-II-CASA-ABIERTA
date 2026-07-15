@@ -35,4 +35,4 @@ go run main.go
 ## Cómo correrlo solo con docker-compose
 
 docker build -t estado-animo .
-docker run -p 8085:8080 estado-animo
+docker run -p 8087:8080 estado-animo
