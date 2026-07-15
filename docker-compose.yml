@@ -26,7 +26,7 @@ services:
   informacion-salud:
     build: ./services/informacion-salud
     environment:
-      - PORT=8080
+      - PORT=8082
     networks:
       - cuidabien-net
     ports:
@@ -36,7 +36,7 @@ services:
     build: ./services/citas
     environment:
       - PORT=8080
-      - INFORMACION_SALUD_URL=http://informacion-salud:8080
+      - INFORMACION_SALUD_URL=http://informacion-salud:8082
     networks:
       - cuidabien-net
     depends_on:
@@ -71,11 +71,13 @@ services:
       - CITAS_URL=http://citas:8080
       - ESTADO_ANIMO_URL=http://estado-animo:8080
       - REPORTES_URL=http://reportes-medicos:8080
+      - INFORMACION_SALUD_URL=http://informacion-salud:8082
       # Aquí se van agregando las URLs de los demás servicios:
       # - EMERGENCIA_URL=http://emergencia:8080
       # - MONITOREO_URL=http://monitoreo:8080
     depends_on:
       - medicamentos
+      - informacion-salud
       - citas
       - estado-animo
       - reportes-medicos
