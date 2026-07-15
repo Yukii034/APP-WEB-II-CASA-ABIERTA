@@ -15,7 +15,6 @@ func main() {
 	http.HandleFunc("/api/appointments/", citasHandler)
 	http.HandleFunc("/api/patients", citasHandler)
 	http.HandleFunc("/api/doctors", citasHandler)
-	http.HandleFunc("/api/reportes-medicos", reportesHandler)
 	http.HandleFunc("/api/reportes-medicos/", reportesHandler)
 
 	port := os.Getenv("PORT")

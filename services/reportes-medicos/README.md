@@ -8,6 +8,8 @@ Equipo: Deimuzh
 
 Genera reportes medicos simulados para adultos mayores. Resume informacion semanal sobre citas, alimentacion, alertas de salud y adherencia a medicinas.
 
+Cuando `CITAS_URL` esta configurada, consulta el microservicio de citas medicas para calcular cuantas citas tiene cada paciente y cuantas estan completadas.
+
 Los datos se manejan en memoria para la demostracion de casa abierta.
 
 ## Puerto
@@ -46,6 +48,7 @@ services/reportes-medicos/
 | Variable | Descripcion | Ejemplo |
 |----------|-------------|---------|
 | PORT | Puerto interno del servicio | 8080 |
+| CITAS_URL | URL interna del servicio de citas medicas | http://citas:8080 |
 
 ## Como correrlo solo
 

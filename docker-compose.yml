@@ -36,6 +36,7 @@ services:
     build: ./services/reportes-medicos
     environment:
       - PORT=8080
+      - CITAS_URL=http://citas:8080
     networks:
       - cuidabien-net
     ports:
