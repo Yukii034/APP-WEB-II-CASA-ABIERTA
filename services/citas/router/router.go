@@ -15,56 +15,56 @@ func New(h *handlers.Handlers) http.HandlerFunc {
 			return
 		}
 
-		if path == "/api/appointments/reminders" {
+		if path == "/api/cita-medica/recordatorios" {
 			h.RecordatoriosHandler(w, r)
 			return
 		}
 
-		if path == "/api/appointments/metrics" {
+		if path == "/api/cita-medica/metricas" {
 			h.MetricasHandler(w, r)
 			return
 		}
 
-		if path == "/api/appointments/recurring" {
+		if path == "/api/cita-medica/recurrentes" {
 			h.CitasRecurrentesHandler(w, r)
 			return
 		}
 
-		if path == "/api/patients" {
+		if path == "/api/cita-medica/pacientes" {
 			h.ListarPacientesHandler(w, r)
 			return
 		}
-		if path == "/api/doctors" {
+		if path == "/api/cita-medica/doctores" {
 			h.ListarDoctoresHandler(w, r)
 			return
 		}
 
-		if strings.HasPrefix(path, "/api/appointments/patient/") {
+		if strings.HasPrefix(path, "/api/cita-medica/paciente/") {
 			h.CitasPorPacienteHandler(w, r)
 			return
 		}
 
-		if strings.HasPrefix(path, "/api/appointments/history/") {
+		if strings.HasPrefix(path, "/api/cita-medica/historial/") {
 			h.HistorialCitaHandler(w, r)
 			return
 		}
 
-		if strings.HasSuffix(path, "/confirm") && strings.HasPrefix(path, "/api/appointments/") {
+		if strings.HasSuffix(path, "/confirmar") && strings.HasPrefix(path, "/api/cita-medica/") {
 			h.ConfirmarCitaHandler(w, r)
 			return
 		}
 
-		if strings.HasSuffix(path, "/complete") && strings.HasPrefix(path, "/api/appointments/") {
+		if strings.HasSuffix(path, "/completar") && strings.HasPrefix(path, "/api/cita-medica/") {
 			h.CompletarCitaHandler(w, r)
 			return
 		}
 
-		if strings.HasSuffix(path, "/notes") && strings.HasPrefix(path, "/api/appointments/") {
+		if strings.HasSuffix(path, "/notas") && strings.HasPrefix(path, "/api/cita-medica/") {
 			h.NotasCitaHandler(w, r)
 			return
 		}
 
-		if strings.HasPrefix(path, "/api/appointments/") && path != "/api/appointments/" {
+		if strings.HasPrefix(path, "/api/cita-medica/") && path != "/api/cita-medica/" {
 			switch r.Method {
 			case http.MethodGet:
 				h.ObtenerCitaHandler(w, r)
@@ -80,12 +80,12 @@ func New(h *handlers.Handlers) http.HandlerFunc {
 			return
 		}
 
-		if path == "/api/appointments" && r.Method == http.MethodPost {
+		if path == "/api/cita-medica" && r.Method == http.MethodPost {
 			h.CrearCitaHandler(w, r)
 			return
 		}
 
-		if path == "/api/appointments" {
+		if path == "/api/cita-medica" {
 			h.ListarCitasHandler(w, r)
 			return
 		}

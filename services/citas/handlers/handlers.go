@@ -195,7 +195,7 @@ func (h *Handlers) ObtenerCitaHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	id := strings.TrimPrefix(r.URL.Path, "/api/appointments/")
+	id := strings.TrimPrefix(r.URL.Path, "/api/cita-medica/")
 	if id == "" {
 		writeError(w, http.StatusBadRequest, "ID de cita requerido")
 		return
@@ -216,7 +216,7 @@ func (h *Handlers) ActualizarCitaHandler(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	id := strings.TrimPrefix(r.URL.Path, "/api/appointments/")
+	id := strings.TrimPrefix(r.URL.Path, "/api/cita-medica/")
 	if id == "" {
 		writeError(w, http.StatusBadRequest, "ID de cita requerido")
 		return
@@ -292,7 +292,7 @@ func (h *Handlers) CancelarCitaHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	id := strings.TrimPrefix(r.URL.Path, "/api/appointments/")
+	id := strings.TrimPrefix(r.URL.Path, "/api/cita-medica/")
 	if id == "" {
 		writeError(w, http.StatusBadRequest, "ID de cita requerido")
 		return
@@ -332,8 +332,8 @@ func (h *Handlers) ConfirmarCitaHandler(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	id := strings.TrimPrefix(r.URL.Path, "/api/appointments/")
-	id = strings.TrimSuffix(id, "/confirm")
+	id := strings.TrimPrefix(r.URL.Path, "/api/cita-medica/")
+	id = strings.TrimSuffix(id, "/confirmar")
 	if id == "" {
 		writeError(w, http.StatusBadRequest, "ID de cita requerido")
 		return
@@ -365,8 +365,8 @@ func (h *Handlers) CompletarCitaHandler(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	id := strings.TrimPrefix(r.URL.Path, "/api/appointments/")
-	id = strings.TrimSuffix(id, "/complete")
+	id := strings.TrimPrefix(r.URL.Path, "/api/cita-medica/")
+	id = strings.TrimSuffix(id, "/completar")
 	if id == "" {
 		writeError(w, http.StatusBadRequest, "ID de cita requerido")
 		return
@@ -405,8 +405,8 @@ func (h *Handlers) NotasCitaHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	id := strings.TrimPrefix(r.URL.Path, "/api/appointments/")
-	id = strings.TrimSuffix(id, "/notes")
+	id := strings.TrimPrefix(r.URL.Path, "/api/cita-medica/")
+	id = strings.TrimSuffix(id, "/notas")
 	if id == "" {
 		writeError(w, http.StatusBadRequest, "ID de cita requerido")
 		return
@@ -438,8 +438,8 @@ func (h *Handlers) NotasCitaHandler(w http.ResponseWriter, r *http.Request) {
 	h.Store.RegistrarHistorial(id, "nota_agregada", "", cita.Estado, req.NotasMedico)
 	logger.LogJSON("INFO", fmt.Sprintf("Notas agregadas a cita %s", id), "notas_cita", r.URL.Path, "")
 	writeJSON(w, http.StatusOK, map[string]string{
-		"mensaje":     "Notas actualizadas exitosamente",
-		"id":          id,
+		"mensaje":      "Notas actualizadas exitosamente",
+		"id":           id,
 		"notas_medico": cita.NotasMedico,
 	})
 }
@@ -450,7 +450,7 @@ func (h *Handlers) CitasPorPacienteHandler(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
-	path := strings.TrimPrefix(r.URL.Path, "/api/appointments/patient/")
+	path := strings.TrimPrefix(r.URL.Path, "/api/cita-medica/paciente/")
 	pacienteID := path
 	if pacienteID == "" {
 		writeError(w, http.StatusBadRequest, "ID de paciente requerido")
@@ -519,7 +519,7 @@ func (h *Handlers) HistorialCitaHandler(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	id := strings.TrimPrefix(r.URL.Path, "/api/appointments/history/")
+	id := strings.TrimPrefix(r.URL.Path, "/api/cita-medica/historial/")
 	if id == "" {
 		writeError(w, http.StatusBadRequest, "ID de cita requerido")
 		return
@@ -641,7 +641,7 @@ func (h *Handlers) CitasRecurrentesHandler(w http.ResponseWriter, r *http.Reques
 	logger.LogJSON("INFO", fmt.Sprintf("Creadas %d citas recurrentes para paciente %s", len(citasCreadas), req.PacienteID), "citas_recurrentes", r.URL.Path, "")
 	writeJSON(w, http.StatusCreated, map[string]interface{}{
 		"mensaje":       fmt.Sprintf("Se crearon %d citas recurrentes", len(citasCreadas)),
-		"citas_creadas":  citasCreadas,
+		"citas_creadas": citasCreadas,
 	})
 }
 
