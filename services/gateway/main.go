@@ -11,11 +11,9 @@ import (
 func main() {
 	http.HandleFunc("/health", healthHandler)
 	http.HandleFunc("/api/medicamentos", medicamentosHandler)
-	http.HandleFunc("/api/appointments", citasHandler)
-	http.HandleFunc("/api/appointments/", citasHandler)
-	http.HandleFunc("/api/patients", citasHandler)
-	http.HandleFunc("/api/doctors", citasHandler)
 	http.HandleFunc("/api/reportes-medicos/", reportesHandler)
+	http.HandleFunc("/api/cita-medica", citasHandler)
+	http.HandleFunc("/api/cita-medica/", citasHandler)
 
 	port := os.Getenv("PORT")
 	if port == "" {
