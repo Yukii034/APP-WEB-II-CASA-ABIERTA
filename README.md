@@ -64,7 +64,7 @@ Esto levanta todos los servicios definidos en `docker-compose.yml`. El gateway q
      networks:
        - cuidabien-net
      ports:
-       - "808X:8080"   # asignar un puerto libre, ver tabla abajo
+       - "8083:8080"   # asignar un puerto libre, ver tabla abajo
 ```
 
 5. **Agregar tu servicio a la matrix del CI**, en `.github/workflows/ci.yml`:
