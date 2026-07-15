@@ -140,4 +140,4 @@ cuidabien/
 | Emergencia | [nombre] |
 | Alimentos | [Eduardo Lopez, Pierina Peñaherrera, José Manuel Castillo, Néstor Gallegos] |
 | Citas médicas | [Deimuzh] |
-| ... | ... |
+| Monitoreo de signos vitales | Anthony Macias, Hector Fernandez, Montecé Frank, Winter Povea |
