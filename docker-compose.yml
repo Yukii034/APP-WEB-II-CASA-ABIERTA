@@ -16,6 +16,9 @@ services:
     build: ./services/alimentacion
     environment:
       - PORT=8080
+      - DESAYUNO_HASTA=10:00
+      - ALMUERZO_HASTA=15:00
+      - CENA_HASTA=21:00
     networks:
       - cuidabien-net
     # No necesita "ports" hacia afuera si solo lo usa el gateway,
@@ -91,6 +94,7 @@ services:
       - contacto-emergencia
       - estado-animo
       - reportes-medicos
+      - alimentacion
     networks:
       - cuidabien-net
     ports:
