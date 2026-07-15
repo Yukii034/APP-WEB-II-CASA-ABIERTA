@@ -19,6 +19,7 @@ jobs:
           - informacion-salud
           - estado-animo
           - citas
+          - contacto-emergencia
           - reportes-medicos
           # agregar aquí cada nuevo microservicio SOLO cuando ya exista
           # su carpeta en services/, si no, el CI falla
