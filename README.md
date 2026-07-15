@@ -96,6 +96,7 @@ Esto levanta todos los servicios definidos en `docker-compose.yml`. El gateway q
 | estado animo     | 8087 | ✅ activo |
 | reportes (equipo) | 8088 | ✅ activo |
 | Recordatorio de medicamentos | 8089 | pendiente |
+| contacto emergencia | 8097 | ✅ activo |
 
 > Antes de asignarte un puerto, revisa esta tabla y actualízala en tu PR para evitar choques con otro equipo.
 
@@ -140,7 +141,7 @@ cuidabien/
 |----------|----------------|
 | Gateway / base del repo | [Pierina Peñaherrera] |
 | Informacion de salud | [Nahim Simba, Jostin Alvarado, Daivelyn Pincay, Joseph Paredes, Cristina Cedeño] |
-| Emergencia | [nombre] |
+| Contacto de emergencia | [Luis Litardo, Steven Soledispa, Ronnie Mera] |
 | Alimentos | [Eduardo Lopez, Pierina Peñaherrera, José Manuel Castillo, Néstor Gallegos] |
 | Reportes médicos | [Anthony Mendoza - Deimuz, Holguin Nathaly Jasmin, Cedeño Geovanny Alexander] |
 | Citas médicas | [Anthony Mendoza - Deimuz, Holguin Nathaly Jasmin, Cedeño Geovanny Alexander] |
