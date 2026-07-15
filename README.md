@@ -89,7 +89,7 @@ Esto levanta todos los servicios definidos en `docker-compose.yml`. El gateway q
 | gateway       | 8080        | ✅ activo |
 | medicamentos  | 8081        | ✅ activo |
 | informacion salud    | 8082        | ✅ activo |
-| monitoreo     | 8083        | pendiente |
+| Monitoreo signos vitales     | 8083        | activo ✅ |
 | alimentacion   | 8084        | ✅ activo |
 | citas médicas | 8085        | ✅ activo |
 | ...           | 808X        | agregar aquí al sumar un servicio |
