@@ -64,6 +64,11 @@ func New(h *handlers.Handlers) http.HandlerFunc {
 			return
 		}
 
+		if strings.HasSuffix(path, "/detalle") && strings.HasPrefix(path, "/api/cita-medica/") {
+			h.DetalleCitaHandler(w, r)
+			return
+		}
+
 		if strings.HasPrefix(path, "/api/cita-medica/") && path != "/api/cita-medica/" {
 			switch r.Method {
 			case http.MethodGet:
