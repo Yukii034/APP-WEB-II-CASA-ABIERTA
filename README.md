@@ -93,7 +93,7 @@ Esto levanta todos los servicios definidos en `docker-compose.yml`. El gateway q
 | alimentacion   | 8084        | ✅ activo |
 | citas médicas | 8085        | ✅ activo |
 | reportes médicos | 8086        | ✅ activo |
-| ...           | 808X        | agregar aquí al sumar un servicio |
+| estado animo     | 8087 | ✅ activo |
 
 > Antes de asignarte un puerto, revisa esta tabla y actualízala en tu PR para evitar choques con otro equipo.
 
