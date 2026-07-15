@@ -10,7 +10,13 @@ import (
 
 func main() {
 	http.HandleFunc("/health", healthHandler)
-	http.HandleFunc("/api/medicamentos", medicamentosHandler)
+	http.HandleFunc("/api/medicamentos", proxyHandler("MEDICAMENTOS_URL"))
+	http.HandleFunc("/api/appointments", proxyHandler("CITAS_URL"))
+	http.HandleFunc("/api/appointments/", proxyHandler("CITAS_URL"))
+	http.HandleFunc("/api/patients", proxyHandler("CITAS_URL"))
+	http.HandleFunc("/api/doctors", proxyHandler("CITAS_URL"))
+	http.HandleFunc("/api/reportes", multiProxyHandler([]string{"REPORTES_URL", "CITAS_URL", "MEDICAMENTOS_URL", "ALIMENTACION_URL"}))
+	http.HandleFunc("/api/reportes/", proxyHandler("REPORTES_URL"))
 
 	port := os.Getenv("PORT")
 	if port == "" {
@@ -26,30 +32,84 @@ func healthHandler(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(map[string]string{"status": "ok"})
 }
 
-// Este handler NO tiene lógica propia: solo redirige (proxy) la petición
-// al microservicio de medicamentos y devuelve su respuesta tal cual.
-// Este es el patrón que usarían para conectar cualquier servicio nuevo.
-func medicamentosHandler(w http.ResponseWriter, r *http.Request) {
-	// La URL del servicio se lee de una variable de entorno, nunca hardcodeada
-	medicamentosURL := os.Getenv("MEDICAMENTOS_URL")
-	if medicamentosURL == "" {
-		http.Error(w, "MEDICAMENTOS_URL no configurada", http.StatusInternalServerError)
-		return
-	}
+// Proxy generico: reenvia la peticion al servicio indicado en la variable de entorno.
+func proxyHandler(envVar string) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		serviceURL := os.Getenv(envVar)
+		if serviceURL == "" {
+			http.Error(w, envVar+" no configurada", http.StatusInternalServerError)
+			return
+		}
 
-	resp, err := http.Get(medicamentosURL + "/api/items")
-	if err != nil {
-		http.Error(w, "Error al contactar el servicio de medicamentos", http.StatusBadGateway)
-		return
-	}
-	defer resp.Body.Close()
+		destino := serviceURL + r.URL.Path
+		if r.URL.RawQuery != "" {
+			destino += "?" + r.URL.RawQuery
+		}
 
-	body, err := io.ReadAll(resp.Body)
-	if err != nil {
-		http.Error(w, "Error al leer la respuesta", http.StatusInternalServerError)
-		return
-	}
+		req, err := http.NewRequest(r.Method, destino, r.Body)
+		if err != nil {
+			http.Error(w, "Error al crear la peticion", http.StatusInternalServerError)
+			return
+		}
+		req.Header.Set("Content-Type", r.Header.Get("Content-Type"))
 
-	w.Header().Set("Content-Type", "application/json")
-	w.Write(body)
+		client := &http.Client{}
+		resp, err := client.Do(req)
+		if err != nil {
+			http.Error(w, "Error al contactar el servicio", http.StatusBadGateway)
+			return
+		}
+		defer resp.Body.Close()
+
+		body, err := io.ReadAll(resp.Body)
+		if err != nil {
+			http.Error(w, "Error al leer la respuesta", http.StatusInternalServerError)
+			return
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(resp.StatusCode)
+		w.Write(body)
+	}
+}
+
+// Proxy multi-servicio: intenta cada servicio en orden, devuelve el primero que responda.
+func multiProxyHandler(envVars []string) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		for _, envVar := range envVars {
+			serviceURL := os.Getenv(envVar)
+			if serviceURL == "" {
+				continue
+			}
+
+			destino := serviceURL + r.URL.Path
+			if r.URL.RawQuery != "" {
+				destino += "?" + r.URL.RawQuery
+			}
+
+			req, err := http.NewRequest(r.Method, destino, r.Body)
+			if err != nil {
+				continue
+			}
+			req.Header.Set("Content-Type", r.Header.Get("Content-Type"))
+
+			client := &http.Client{}
+			resp, err := client.Do(req)
+			if err != nil {
+				continue
+			}
+			defer resp.Body.Close()
+
+			body, err := io.ReadAll(resp.Body)
+			if err != nil {
+				continue
+			}
+
+			w.Header().Set("Content-Type", "application/json")
+			w.WriteHeader(resp.StatusCode)
+			w.Write(body)
+			return
+		}
+		http.Error(w, "Ningun servicio disponible", http.StatusBadGateway)
+	}
 }

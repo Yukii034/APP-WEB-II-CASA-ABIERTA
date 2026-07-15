@@ -1,46 +1,46 @@
 package main
 
 import (
-	"encoding/json"
 	"log"
 	"net/http"
 	"os"
+
+	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
+
+	"cuidabien/informacion-salud/internal/handler"
+	"cuidabien/informacion-salud/internal/repository"
+	"cuidabien/informacion-salud/internal/service"
 )
 
-// Estructura de ejemplo, cada equipo la cambia según lo que necesite
-type Item struct {
-	ID     string `json:"id"`
-	Nombre string `json:"nombre"`
-}
-
-// Datos de ejemplo en memoria (luego pueden usar una base de datos si quieren)
-var items = []Item{
-	{ID: "1", Nombre: "Ejemplo 1"},
-	{ID: "2", Nombre: "Ejemplo 2"},
-}
-
 func main() {
-	http.HandleFunc("/health", healthHandler)
-	http.HandleFunc("/api/items", itemsHandler)
+	repo := repository.NuevaMemoriaRepository()
+	repository.Sembrar(repo)
+
+	svc := service.NuevoInformacionSaludService(repo)
+	h := handler.NuevoInformacionSaludHandler(svc)
+
+	r := chi.NewRouter()
+	r.Use(middleware.Logger)
+	r.Use(middleware.Recoverer)
+
+	r.Get("/health", handler.Health)
+
+	r.Route("/api/informacion-salud", func(r chi.Router) {
+		r.Get("/", h.Listar)
+		r.Post("/", h.Crear)
+
+		r.Route("/{id}", func(r chi.Router) {
+			r.Get("/", h.Obtener)
+			r.Put("/", h.Actualizar)
+		})
+	})
 
 	port := os.Getenv("PORT")
 	if port == "" {
-		port = "8080" // puerto por defecto dentro del contenedor
+		port = "8082"
 	}
 
-	log.Printf("Servicio corriendo en el puerto %s", port)
-	log.Fatal(http.ListenAndServe(":"+port, nil))
-}
-
-// Endpoint obligatorio: usado por el gateway y por docker-compose
-// para saber si el servicio está vivo
-func healthHandler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(map[string]string{"status": "ok"})
-}
-
-// Endpoint de ejemplo, cada equipo lo reemplaza por su lógica real
-func itemsHandler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(items)
+	log.Printf("Servicio de información de salud corriendo en el puerto %s", port)
+	log.Fatal(http.ListenAndServe(":"+port, r))
 }

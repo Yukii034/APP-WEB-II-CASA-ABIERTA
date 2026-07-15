@@ -17,6 +17,8 @@ jobs:
           - gateway
           - alimentacion
           - informacion-salud
+          - citas
+          - reportes
           # agregar aquí cada nuevo microservicio SOLO cuando ya exista
           # su carpeta en services/, si no, el CI falla
 
