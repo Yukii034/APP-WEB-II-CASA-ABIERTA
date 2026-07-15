@@ -60,7 +60,7 @@ Esto levanta todos los servicios definidos en `docker-compose.yml`. El gateway q
    nombre-de-tu-servicio:
      build: ./services/nombre-de-tu-servicio
      environment:
-       - PORT=8080
+       - PORT=8083
      networks:
        - cuidabien-net
      ports:
