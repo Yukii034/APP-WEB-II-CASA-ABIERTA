@@ -86,8 +86,11 @@ go 1.22
 | monitoreo     | 8083        | pendiente |
 | alimentacion   | 8084        | ✅ activo |
 | citas médicas | 8085        | ✅ activo |
-| contacto emergencia | 8086  | ✅ activo |
-| ...           | 808X        | agregar aquí al sumar un servicio |
+| contacto emergencia | 8097  | ✅ activo |
+| reportes médicos | 8086        | ✅ activo |
+| estado animo     | 8087 | ✅ activo |
+| Recordatorio de medicamentos     | 8088 | pendiente  |
+| ...           | 809X        | agregar aquí al sumar un servicio |
 
 > Antes de asignarte un puerto, revisa esta tabla y actualízala en tu PR para evitar choques con otro equipo.
 
@@ -126,8 +129,11 @@ cuidabien/
 | Servicio | Responsable(s) |
 |----------|----------------|
 | Gateway / base del repo | [Pierina Peñaherrera] |
-| Informacion de salud | [Nahim Simba] |
-| Contacto de emergencia | [Stiven Soledispa, Luis Litardo, Ronnie Mera] |
+| Informacion de salud | [Nahim Simba, Jostin Alvarado, Daivelyn Pincay, Joseph Paredes, Cristina Cedeño] |
+| Contacto de emergencia | [Luis Litardo, Steven Soledispa, Ronnie Mera] |
 | Alimentos | [Eduardo Lopez, Pierina Peñaherrera, José Manuel Castillo, Néstor Gallegos] |
-| Citas médicas | [Deimuzh] |
+| Reportes médicos | [Anthony Mendoza - Deimuz, Holguin Nathaly Jasmin, Cedeño Geovanny Alexander] |
+| Citas médicas | [Anthony Mendoza - Deimuz, Holguin Nathaly Jasmin, Cedeño Geovanny Alexander] |
+| Estado animo |  [Danny Zambrano, Michael Cedeño] |
+| Recordatorio de medicamentos | Manuel Intriago, Madelyn Zambrano, Michelle Salazar |
 | ... | ... |
