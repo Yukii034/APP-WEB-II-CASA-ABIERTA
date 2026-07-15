@@ -1,0 +1,68 @@
+services:
+
+  medicamentos:
+    build: ./services/medicamentos
+    environment:
+      - PORT=8080
+    networks:
+      - cuidabien-net
+    ports:
+      - "8081:8080"
+
+  alimentacion:
+    build: ./services/alimentacion
+    environment:
+      - PORT=8080
+    networks:
+      - cuidabien-net
+    ports:
+      - "8084:8080"
+
+  citas:
+    build: ./services/citas
+    environment:
+      - PORT=8080
+    networks:
+      - cuidabien-net
+    ports:
+      - "8085:8080"
+
+  reportes-medicos:
+    build: ./services/reportes-medicos
+    environment:
+      - PORT=8080
+    networks:
+      - cuidabien-net
+    ports:
+      - "8086:8080"
+
+  actividad-fisica:
+    build: ./services/actividad-fisica
+    environment:
+      - PORT=8080
+    networks:
+      - cuidabien-net
+    ports:
+      - "8083:8080"
+
+  gateway:
+    build: ./services/gateway
+    environment:
+      - PORT=8080
+      - MEDICAMENTOS_URL=http://medicamentos:8080
+      - CITAS_URL=http://citas:8080
+      - REPORTES_URL=http://reportes-medicos:8080
+      - ACTIVIDAD_FISICA_URL=http://actividad-fisica:8080
+    depends_on:
+      - medicamentos
+      - citas
+      - reportes-medicos
+      - actividad-fisica
+    networks:
+      - cuidabien-net
+    ports:
+      - "8080:8080"
+
+networks:
+  cuidabien-net:
+    driver: bridge
