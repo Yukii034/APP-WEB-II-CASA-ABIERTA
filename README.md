@@ -143,8 +143,8 @@ cuidabien/
 | Informacion de salud | [Nahim Simba, Jostin Alvarado, Daivelyn Pincay, Joseph Paredes, Cristina Cedeño] |
 | Contacto de emergencia | [Luis Litardo, Steven Soledispa, Ronnie Mera] |
 | Alimentos | [Eduardo Lopez, Pierina Peñaherrera, José Manuel Castillo, Néstor Gallegos] |
-| Reportes médicos | [Anthony Mendoza - Deimuz, Holguin Nathaly Jasmin, Cedeño Geovanny Alexander - alex167j] |
-| Citas médicas | [Anthony Mendoza - Deimuz, Holguin Nathaly Jasmin, Cedeño Geovanny Alexander - alex167j] |
+| Reportes médicos | [Anthony Mendoza - Deimuz, Holguin Nathaly Jasmin - NathalyLucas11, Cedeño Geovanny Alexander - alex167j] |
+| Citas médicas | [Anthony Mendoza - Deimuz, Holguin Nathaly Jasmin - NathalyLucas11, Cedeño Geovanny Alexander - alex167j] |
 | Estado animo |  [Danny Zambrano, Michael Cedeño] |
 | Recordatorio de medicamentos | Manuel Intriago, Madelyn Zambrano, Michelle Salazar |
 | ... | ... |
