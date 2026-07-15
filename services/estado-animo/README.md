@@ -8,7 +8,7 @@ Registra diariamente el estado de ánimo del adulto mayor utilizando una escala 
 
 ## Puerto
 Este servicio corre internamente en el puerto **8080** (dentro del contenedor).
-Puerto expuesto al host: **8085**
+Puerto expuesto al host: **8087**
 
 ## Endpoints
 
