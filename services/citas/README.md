@@ -29,6 +29,7 @@ Puerto expuesto al host: **8085**.
 | PATCH | `/api/cita-medica/{id}/confirmar` | Confirma una cita pendiente |
 | PATCH | `/api/cita-medica/{id}/completar` | Marca una cita confirmada como completada |
 | PATCH | `/api/cita-medica/{id}/notas` | Agrega notas medicas |
+| GET | `/api/cita-medica/{id}/detalle` | Consulta la cita con paciente, doctor e informacion de salud |
 | GET | `/api/cita-medica/paciente/{id}` | Lista citas de un paciente |
 | GET | `/api/cita-medica/historial/{id}` | Lista el historial de una cita |
 | GET | `/api/cita-medica/recordatorios` | Lista recordatorios simulados |
@@ -43,8 +44,17 @@ Puerto expuesto al host: **8085**.
 |----------|-------------|---------|
 | PORT | Puerto interno del servicio | 8080 |
 | API_KEY | Clave opcional para proteger endpoints | demo123 |
+| INFORMACION_SALUD_URL | URL interna del servicio de informacion-salud | http://informacion-salud:8080 |
 
 Si `API_KEY` no esta configurada, el servicio permite peticiones sin autenticacion.
+
+El endpoint de detalle usa un mapeo interno para relacionar pacientes de citas con fichas de informacion-salud:
+
+| Paciente citas | Ficha informacion-salud |
+|----------------|--------------------------|
+| P001 | 1 |
+| P002 | 2 |
+| P003 | 3 |
 
 ## Ejemplo de creacion de cita
 

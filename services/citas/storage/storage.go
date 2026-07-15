@@ -9,15 +9,15 @@ import (
 )
 
 type Store struct {
-	Citas        []models.Cita
-	Pacientes    []models.Paciente
-	Doctores     []models.Doctor
-	Historial    []models.EventoHistorial
-	NextID       int
-	TodayCreated int
+	Citas          []models.Cita
+	Pacientes      []models.Paciente
+	Doctores       []models.Doctor
+	Historial      []models.EventoHistorial
+	NextID         int
+	TodayCreated   int
 	TodayCancelled int
 	TodayCompleted int
-	TodayDate    string
+	TodayDate      string
 }
 
 func NewStore() *Store {
@@ -68,6 +68,15 @@ func (s *Store) FindDoctorByID(id string) *models.Doctor {
 		}
 	}
 	return nil
+}
+
+func InformacionSaludIDPorPaciente(pacienteID string) string {
+	mapeo := map[string]string{
+		"P001": "1",
+		"P002": "2",
+		"P003": "3",
+	}
+	return mapeo[pacienteID]
 }
 
 func (s *Store) EsFechaPasada(fecha, hora string) bool {
