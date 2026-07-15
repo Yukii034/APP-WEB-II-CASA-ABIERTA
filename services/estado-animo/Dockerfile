@@ -3,18 +3,18 @@ FROM golang:1.22-alpine AS build
 
 WORKDIR /app
 
-COPY go.mod go.sum ./
+COPY go.mod ./
 RUN go mod download
 
 COPY . .
-RUN go build -o informacion-salud .
+RUN go build -o servicio .
 
 # Etapa final (imagen liviana, sin herramientas de compilación)
 FROM alpine:latest
 
 WORKDIR /app
-COPY --from=build /app/informacion-salud .
+COPY --from=build /app/servicio .
 
-EXPOSE 8082
+EXPOSE 8080
 
-CMD ["./informacion-salud"]
+CMD ["./servicio"]
