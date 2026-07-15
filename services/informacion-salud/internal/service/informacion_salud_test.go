@@ -1,6 +1,7 @@
 package service
 
 import (
+	"strconv"
 	"testing"
 	"time"
 
@@ -33,7 +34,7 @@ func TestNuevoRegistroNormalizaListasNulas(t *testing.T) {
 	}
 }
 
-func TestActualizarRegistroMantieneCamposNoEnviados(t *testing.T) {
+func TestActualizarRegistro(t *testing.T) {
 	original := model.InformacionSalud{
 		ID:                   "1",
 		NombrePaciente:       "María Pérez",
@@ -43,27 +44,63 @@ func TestActualizarRegistroMantieneCamposNoEnviados(t *testing.T) {
 		AntecedentesMedicos:  []string{"cirugía de cadera 2019"},
 		ActualizadoEn:        time.Date(2026, 1, 1, 0, 0, 0, 0, time.UTC),
 	}
-
-	// Solo se envía una actualización de alergias, el resto no debería borrarse.
-	entrada := model.EntradaInformacionSalud{
-		Alergias: []string{"penicilina", "aspirina"},
-	}
 	ahora := time.Date(2026, 7, 12, 11, 0, 0, 0, time.UTC)
 
-	actualizado := actualizarRegistro(original, entrada, ahora)
+	t.Run("mantiene los campos que no se envían", func(t *testing.T) {
+		// Solo se envía una actualización de alergias, el resto no debería borrarse.
+		entrada := model.EntradaInformacionSalud{
+			Alergias: []string{"penicilina", "aspirina"},
+		}
 
-	if actualizado.NombrePaciente != "María Pérez" {
-		t.Errorf("el nombre no debería cambiar, obtuve %s", actualizado.NombrePaciente)
-	}
-	if len(actualizado.Diagnosticos) != 1 || actualizado.Diagnosticos[0] != "hipertensión" {
-		t.Errorf("los diagnósticos no deberían cambiar, obtuve %v", actualizado.Diagnosticos)
-	}
-	if len(actualizado.Alergias) != 2 {
-		t.Errorf("esperaba 2 alergias tras la actualización, obtuve %v", actualizado.Alergias)
-	}
-	if !actualizado.ActualizadoEn.Equal(ahora) {
-		t.Errorf("esperaba que se actualizara la fecha a %v, obtuve %v", ahora, actualizado.ActualizadoEn)
-	}
+		actualizado := actualizarRegistro(original, entrada, ahora)
+
+		if actualizado.NombrePaciente != "María Pérez" {
+			t.Errorf("el nombre no debería cambiar, obtuve %s", actualizado.NombrePaciente)
+		}
+		if len(actualizado.Diagnosticos) != 1 || actualizado.Diagnosticos[0] != "hipertensión" {
+			t.Errorf("los diagnósticos no deberían cambiar, obtuve %v", actualizado.Diagnosticos)
+		}
+		if len(actualizado.Alergias) != 2 {
+			t.Errorf("esperaba 2 alergias tras la actualización, obtuve %v", actualizado.Alergias)
+		}
+		if !actualizado.ActualizadoEn.Equal(ahora) {
+			t.Errorf("esperaba que se actualizara la fecha a %v, obtuve %v", ahora, actualizado.ActualizadoEn)
+		}
+	})
+
+	t.Run("una lista vacía explícita sí borra el campo", func(t *testing.T) {
+		// A diferencia de no enviar el campo (nil), enviar [] es una
+		// instrucción explícita de "ya no tiene diagnósticos".
+		entrada := model.EntradaInformacionSalud{
+			Diagnosticos: []string{},
+		}
+
+		actualizado := actualizarRegistro(original, entrada, ahora)
+
+		if len(actualizado.Diagnosticos) != 0 {
+			t.Errorf("esperaba que una lista vacía explícita borre el campo, obtuve %v", actualizado.Diagnosticos)
+		}
+		// Los campos no tocados por esta petición siguen intactos.
+		if len(actualizado.Alergias) != 1 || actualizado.Alergias[0] != "penicilina" {
+			t.Errorf("las alergias no deberían cambiar, obtuve %v", actualizado.Alergias)
+		}
+	})
+
+	t.Run("no envía nada y no cambia ningún campo, solo la fecha", func(t *testing.T) {
+		entrada := model.EntradaInformacionSalud{}
+
+		actualizado := actualizarRegistro(original, entrada, ahora)
+
+		if actualizado.NombrePaciente != original.NombrePaciente {
+			t.Errorf("el nombre no debería cambiar, obtuve %s", actualizado.NombrePaciente)
+		}
+		if len(actualizado.Diagnosticos) != len(original.Diagnosticos) {
+			t.Errorf("los diagnósticos no deberían cambiar, obtuve %v", actualizado.Diagnosticos)
+		}
+		if !actualizado.ActualizadoEn.Equal(ahora) {
+			t.Errorf("esperaba que igual se actualice la fecha a %v, obtuve %v", ahora, actualizado.ActualizadoEn)
+		}
+	})
 }
 
 func TestNormalizarConvierteNilEnListaVacia(t *testing.T) {
@@ -76,10 +113,20 @@ func TestNormalizarConvierteNilEnListaVacia(t *testing.T) {
 	}
 }
 
-func TestServiceCrearYObtener(t *testing.T) {
-	svc := NuevoInformacionSaludService(&repositorioFake{registros: map[string]model.InformacionSalud{}})
+func TestNormalizarConservaListaConValores(t *testing.T) {
+	resultado := normalizar([]string{"a", "b"})
+	if len(resultado) != 2 {
+		t.Errorf("esperaba conservar los 2 valores, obtuve %v", resultado)
+	}
+}
 
-	creado := svc.Crear(model.EntradaInformacionSalud{NombrePaciente: "Juan"})
+func TestServiceCrearYObtener(t *testing.T) {
+	svc := NuevoInformacionSaludService(nuevoRepositorioFake())
+
+	creado := svc.Crear(model.EntradaInformacionSalud{
+		NombrePaciente: "Juan",
+		Diagnosticos:   []string{"gripe"},
+	})
 	if creado.ID == "" {
 		t.Fatal("esperaba que Crear asigne un id")
 	}
@@ -91,14 +138,66 @@ func TestServiceCrearYObtener(t *testing.T) {
 	if obtenido.NombrePaciente != "Juan" {
 		t.Errorf("esperaba nombre 'Juan', obtuve %s", obtenido.NombrePaciente)
 	}
+	if len(obtenido.Diagnosticos) != 1 || obtenido.Diagnosticos[0] != "gripe" {
+		t.Errorf("esperaba diagnóstico 'gripe', obtuve %v", obtenido.Diagnosticos)
+	}
+}
+
+func TestServiceCrearAsignaIDsDistintos(t *testing.T) {
+	svc := NuevoInformacionSaludService(nuevoRepositorioFake())
+
+	a := svc.Crear(model.EntradaInformacionSalud{NombrePaciente: "Juan"})
+	b := svc.Crear(model.EntradaInformacionSalud{NombrePaciente: "Ana"})
+
+	if a.ID == b.ID {
+		t.Errorf("esperaba ids distintos para registros distintos, ambos fueron %s", a.ID)
+	}
+}
+
+func TestServiceListarDevuelveTodosLosRegistros(t *testing.T) {
+	svc := NuevoInformacionSaludService(nuevoRepositorioFake())
+	svc.Crear(model.EntradaInformacionSalud{NombrePaciente: "Juan"})
+	svc.Crear(model.EntradaInformacionSalud{NombrePaciente: "Ana"})
+
+	lista := svc.Listar()
+
+	if len(lista) != 2 {
+		t.Errorf("esperaba 2 registros, obtuve %d", len(lista))
+	}
+}
+
+func TestServiceObtenerIDInexistente(t *testing.T) {
+	svc := NuevoInformacionSaludService(nuevoRepositorioFake())
+
+	_, ok := svc.Obtener("no-existe")
+	if ok {
+		t.Fatal("esperaba ok=false al consultar un id que no existe")
+	}
 }
 
 func TestServiceActualizarIDInexistente(t *testing.T) {
-	svc := NuevoInformacionSaludService(&repositorioFake{registros: map[string]model.InformacionSalud{}})
+	svc := NuevoInformacionSaludService(nuevoRepositorioFake())
 
 	_, ok := svc.Actualizar("no-existe", model.EntradaInformacionSalud{})
 	if ok {
 		t.Fatal("esperaba ok=false al actualizar un id que no existe")
+	}
+}
+
+func TestServiceActualizarPersisteElCambio(t *testing.T) {
+	svc := NuevoInformacionSaludService(nuevoRepositorioFake())
+	creado := svc.Crear(model.EntradaInformacionSalud{NombrePaciente: "Juan"})
+
+	_, ok := svc.Actualizar(creado.ID, model.EntradaInformacionSalud{
+		Alergias: []string{"penicilina"},
+	})
+	if !ok {
+		t.Fatal("esperaba poder actualizar un registro existente")
+	}
+
+	obtenido, _ := svc.Obtener(creado.ID)
+	if len(obtenido.Alergias) != 1 || obtenido.Alergias[0] != "penicilina" {
+		t.Errorf("esperaba que la actualización quedara guardada, obtuve %v", obtenido.Alergias)
 	}
 }
 
@@ -107,6 +206,10 @@ func TestServiceActualizarIDInexistente(t *testing.T) {
 type repositorioFake struct {
 	registros   map[string]model.InformacionSalud
 	siguienteID int
+}
+
+func nuevoRepositorioFake() *repositorioFake {
+	return &repositorioFake{registros: map[string]model.InformacionSalud{}}
 }
 
 func (r *repositorioFake) Listar() []model.InformacionSalud {
@@ -128,5 +231,5 @@ func (r *repositorioFake) Guardar(registro model.InformacionSalud) {
 
 func (r *repositorioFake) SiguienteID() string {
 	r.siguienteID++
-	return "fake-" + string(rune('0'+r.siguienteID))
+	return "fake-" + strconv.Itoa(r.siguienteID)
 }
