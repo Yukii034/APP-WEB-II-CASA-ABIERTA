@@ -39,7 +39,7 @@ services:
     networks:
       - cuidabien-net
     ports:
-      - "8086:8080"
+      - "8743:8080"
 
   gateway:
     build: ./services/gateway
