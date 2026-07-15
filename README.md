@@ -94,6 +94,7 @@ Esto levanta todos los servicios definidos en `docker-compose.yml`. El gateway q
 | citas médicas | 8085        | ✅ activo |
 | reportes médicos | 8086        | ✅ activo |
 | estado animo     | 8087 | ✅ activo |
+| Recordatorio de medicamentos     | 8088 | pendiente  |
 
 > Antes de asignarte un puerto, revisa esta tabla y actualízala en tu PR para evitar choques con otro equipo.
 
@@ -143,4 +144,5 @@ cuidabien/
 | Reportes médicos | [Anthony Mendoza - Deimuz, Holguin Nathaly Jasmin, Cedeño Geovanny Alexander] |
 | Citas médicas | [Anthony Mendoza - Deimuz, Holguin Nathaly Jasmin, Cedeño Geovanny Alexander] |
 | Estado animo |  [Danny Zambrano, Michael Cedeño] |
-| ... | ... |
+| Recordatorio de medicamentos | Manuel Intriago, Madelyn Zambrano, Michelle Salazar |
+
