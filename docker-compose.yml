@@ -44,6 +44,15 @@ services:
     ports:
       - "8085:8080"
 
+  estado-animo:
+    build: ./services/estado-animo
+    environment:
+      - PORT=8080
+    networks:
+      - cuidabien-net
+    ports:
+      - "8087:8080"
+
   reportes-medicos:
     build: ./services/reportes-medicos
     environment:
@@ -60,6 +69,7 @@ services:
       - PORT=8080
       - MEDICAMENTOS_URL=http://medicamentos:8080
       - CITAS_URL=http://citas:8080
+      - ESTADO_ANIMO_URL=http://estado-animo:8080
       - REPORTES_URL=http://reportes-medicos:8080
       # Aquí se van agregando las URLs de los demás servicios:
       # - EMERGENCIA_URL=http://emergencia:8080
@@ -67,6 +77,7 @@ services:
     depends_on:
       - medicamentos
       - citas
+      - estado-animo
       - reportes-medicos
     networks:
       - cuidabien-net
