@@ -30,11 +30,6 @@ func New(h *handlers.Handlers) http.HandlerFunc {
 			return
 		}
 
-		if path == "/api/reportes-medicos" {
-			h.SemanalHandler(w, r)
-			return
-		}
-
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusNotFound)
 		w.Write([]byte(`{"error":"Ruta no encontrada"}`))

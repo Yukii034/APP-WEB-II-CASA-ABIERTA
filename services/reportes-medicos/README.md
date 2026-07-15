@@ -21,7 +21,6 @@ Puerto expuesto al host: **8086**.
 | Metodo | Ruta | Descripcion |
 |--------|------|-------------|
 | GET | `/health` | Verifica que el servicio este vivo |
-| GET | `/api/reportes-medicos` | Lista reportes semanales simulados |
 | GET | `/api/reportes-medicos/semanal` | Lista reportes semanales simulados |
 | GET | `/api/reportes-medicos/resumen` | Muestra resumen general de reportes |
 | GET | `/api/reportes-medicos/paciente/{id}` | Consulta reporte por paciente |
