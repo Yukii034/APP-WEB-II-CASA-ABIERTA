@@ -89,6 +89,16 @@ services:
     networks:
       - cuidabien-net
 
+  cuidadores:
+    build: ./services/cuidadores
+    environment:
+      - PORT=8080
+    networks:
+      - cuidabien-net
+    ports:
+      - "8099:8080"
+
+
   actividad-fisica:
     build: ./services/actividad-fisica
     environment:
@@ -97,6 +107,7 @@ services:
       - cuidabien-net
     ports:
       - "8090:8080"
+      
 
   contacto-emergencia:
     build: ./services/contacto-emergencia
