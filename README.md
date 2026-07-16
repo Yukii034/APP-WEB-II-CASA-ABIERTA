@@ -98,6 +98,7 @@ Esto levanta todos los servicios definidos en `docker-compose.yml`. El gateway q
 | actividad física | 8090 | ✅ activo |
 | contacto emergencia | 8097 | ✅ activo |
 | cuidadores | 8099 | 🚧 en desarrollo |
+| estimulacion cognitiva | 8095 | ✅ activo |
 
 > Antes de asignarte un puerto, revisa esta tabla y actualízala en tu PR para evitar choques con otro equipo.
 
@@ -149,5 +150,5 @@ cuidabien/
 | Estado animo |  [Danny Zambrano, Michael Cedeño] |
 | Recordatorio de medicamentos | [Manuel Intriago, Madelyn Zambrano, Michelle Salazar] |
 | Cuidadores | Jeremy (S3N-SHI) |
-
+| Estimulación cognitiva | Bryan López  -  Isaac Sornoza  -  Eduardo Flores |
 | Monitoreo de signos vitales | [Anthony Macias, Winter Povea, Montecé Frank, Hector Fernandez] |
