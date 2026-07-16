@@ -2,7 +2,7 @@
 
 ## Responsable
 
-Equipo: Luis Litardo , stiven Soledispa, Ronnie Mera
+Equipo: Luis Litardo , Steven Soledispa, Ronnie Mera
 
 ## Que hace este servicio
 
