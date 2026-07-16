@@ -14,6 +14,9 @@ services:
     build: ./services/alimentacion
     environment:
       - PORT=8080
+      - DESAYUNO_HASTA=10:00
+      - ALMUERZO_HASTA=15:00
+      - CENA_HASTA=21:00
     networks:
       - cuidabien-net
     ports:
