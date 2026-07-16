@@ -13,7 +13,6 @@ jobs:
     strategy:
       matrix:
         service:
-          - medicamentos
           - gateway
           - alimentacion
           - informacion-salud
@@ -22,6 +21,9 @@ jobs:
           - reportes
           - contacto-emergencia
           - reportes-medicos
+          - recordatorios-medicamentos
+          - actividad-fisica
+          - monitoreo-signos-vitales
           # agregar aquí cada nuevo microservicio SOLO cuando ya exista
           # su carpeta en services/, si no, el CI falla
 
@@ -37,7 +39,7 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version: '1.22'
-          cache-dependency-path: services/${{ matrix.service }}/go.sum
+          cache-dependency-path: services/${{ matrix.service }}/go.mod
 
       - name: Descargar dependencias
         run: go mod download

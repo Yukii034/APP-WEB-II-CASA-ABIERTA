@@ -60,11 +60,11 @@ Esto levanta todos los servicios definidos en `docker-compose.yml`. El gateway q
    nombre-de-tu-servicio:
      build: ./services/nombre-de-tu-servicio
      environment:
-       - PORT=8080
+       - PORT=8083
      networks:
        - cuidabien-net
      ports:
-       - "808X:8080"   # asignar un puerto libre, ver tabla abajo
+       - "8083:8080"   # asignar un puerto libre, ver tabla abajo
 ```
 
 5. **Agregar tu servicio a la matrix del CI**, en `.github/workflows/ci.yml`:
@@ -87,16 +87,17 @@ Esto levanta todos los servicios definidos en `docker-compose.yml`. El gateway q
 | Servicio      | Puerto host | Estado |
 |---------------|-------------|--------|
 | gateway       | 8080        | ✅ activo |
-| medicamentos  | 8081        | ✅ activo |
 | informacion salud    | 8082        | ✅ activo |
-| monitoreo     | 8083        | pendiente |
+| monitoreo de signos vitales | 8083 | ✅ activo |
 | alimentacion   | 8084        | ✅ activo |
 | citas médicas | 8085        | ✅ activo |
 | reportes médicos | 8086        | ✅ activo |
 | estado animo     | 8087 | ✅ activo |
 | reportes (equipo) | 8088 | ✅ activo |
-| Recordatorio de medicamentos | 8089 | pendiente |
+| Recordatorio de medicamentos | 8089 | ✅ activo |
+| actividad física | 8090 | ✅ activo |
 | contacto emergencia | 8097 | ✅ activo |
+| cuidadores | 8099 | ✅ activo |
 
 > Antes de asignarte un puerto, revisa esta tabla y actualízala en tu PR para evitar choques con otro equipo.
 
@@ -141,10 +142,21 @@ cuidabien/
 |----------|----------------|
 | Gateway / base del repo | [Pierina Peñaherrera] |
 | Informacion de salud | [Nahim Simba, Jostin Alvarado, Daivelyn Pincay, Joseph Paredes, Cristina Cedeño] |
-| Contacto de emergencia | [Luis Litardo, Steven Soledispa, Ronnie Mera] |
+| Emergencia | [nombre] |
 | Alimentos | [Eduardo Lopez, Pierina Peñaherrera, José Manuel Castillo, Néstor Gallegos] |
-| Reportes médicos | [Anthony Mendoza - Deimuz, Holguin Nathaly Jasmin - NathalyLucas11, Cedeño Geovanny Alexander - alex167j] |
-| Citas médicas | [Anthony Mendoza - Deimuz, Holguin Nathaly Jasmin - NathalyLucas11, Cedeño Geovanny Alexander - alex167j] |
+| Reportes médicos | [Anthony Mendoza - Deimuz, Holguin Nathaly Jasmin, Cedeño Geovanny Alexander] |
+| Citas médicas | [Anthony Mendoza - Deimuz, Holguin Nathaly Jasmin, Cedeño Geovanny Alexander] |
 | Estado animo |  [Danny Zambrano, Michael Cedeño] |
-| Recordatorio de medicamentos | Manuel Intriago, Madelyn Zambrano, Michelle Salazar |
-| ... | ... |
+| Recordatorio de medicamentos | [Manuel Intriago, Madelyn Zambrano, Michelle Salazar] |
+<<<<<<< HEAD
+<<<<<<< HEAD
+| Cuidadores | Jeremy (S3N-SHI) |
+
+=======
+| Monitoreo de signos vitales | [Anthony Macias, Winter Povea, Montecé Frank, Hector Fernandez] |
+>>>>>>> origin/main
+=======
+| Cuidadores | Jeremy (S3N-SHI) |
+
+| Monitoreo de signos vitales | [Anthony Macias, Winter Povea, Montecé Frank, Hector Fernandez] |
+>>>>>>> 004c184a7f81275e46278115735a80c8a178f452
