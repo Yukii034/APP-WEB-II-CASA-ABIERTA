@@ -1,9 +1,15 @@
 package handlers
 
-// respond.go
-//
-// Responsabilidad: capa Handler (endpoints REST).
-// Ver SPEC.md §10.1.
-//
-// TASK-001: Estructura inicial creada.
-// La implementación se realizará en la FASE 5 (API REST) de TASKS.md.
+import (
+	"encoding/json"
+	"net/http"
+)
+
+func responderJSON(w http.ResponseWriter, estado int, valor any) {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(estado)
+	_ = json.NewEncoder(w).Encode(valor)
+}
+func responderError(w http.ResponseWriter, estado int, mensaje string) {
+	responderJSON(w, estado, map[string]string{"error": mensaje})
+}

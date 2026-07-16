@@ -11,6 +11,8 @@ import (
 func main() {
 	http.HandleFunc("/health", healthHandler)
 	http.HandleFunc("/api/medicamentos", medicamentosHandler)
+	http.HandleFunc("/api/vitales", monitoreoSignosVitalesHandler)
+	http.HandleFunc("/api/vitales/", monitoreoSignosVitalesHandler)
 	http.HandleFunc("/api/appointments", citasHandler)
 	http.HandleFunc("/api/appointments/", citasHandler)
 	http.HandleFunc("/api/patients", citasHandler)
@@ -55,6 +57,45 @@ func medicamentosHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", "application/json")
+	w.Write(body)
+}
+
+// Proxy al microservicio de monitoreo de signos vitales.
+// Reenvia la peticion completa para conservar el metodo, la ruta, query y body.
+func monitoreoSignosVitalesHandler(w http.ResponseWriter, r *http.Request) {
+	monitoreoURL := os.Getenv("MONITOREO_SIGNOS_VITALES_URL")
+	if monitoreoURL == "" {
+		http.Error(w, "MONITOREO_SIGNOS_VITALES_URL no configurada", http.StatusInternalServerError)
+		return
+	}
+
+	destino := monitoreoURL + r.URL.Path
+	if r.URL.RawQuery != "" {
+		destino += "?" + r.URL.RawQuery
+	}
+
+	req, err := http.NewRequest(r.Method, destino, r.Body)
+	if err != nil {
+		http.Error(w, "Error al crear la peticion", http.StatusInternalServerError)
+		return
+	}
+	req.Header.Set("Content-Type", r.Header.Get("Content-Type"))
+
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		http.Error(w, "Error al contactar el servicio de monitoreo", http.StatusBadGateway)
+		return
+	}
+	defer resp.Body.Close()
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		http.Error(w, "Error al leer la respuesta", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(resp.StatusCode)
 	w.Write(body)
 }
 
