@@ -19,10 +19,11 @@ type Repository interface {
 }
 
 // memoriaRepository guarda las fichas en un mapa en memoria, protegido
-// con un mutex para uso concurrente. Los datos se pierden si el
-// contenedor se reinicia (ver docs/arquitectura.md - limitaciones).
+// con un RWMutex para uso concurrente (múltiples lecturas en paralelo,
+// una sola escritura a la vez). Los datos se pierden si el contenedor
+// se reinicia (ver docs/arquitectura.md - limitaciones).
 type memoriaRepository struct {
-	mu          sync.Mutex
+	mu          sync.RWMutex
 	registros   map[string]model.InformacionSalud
 	siguienteID int
 }
@@ -36,29 +37,32 @@ func NuevaMemoriaRepository() Repository {
 }
 
 func (r *memoriaRepository) Listar() []model.InformacionSalud {
-	r.mu.Lock()
-	defer r.mu.Unlock()
+	r.mu.RLock()
+	defer r.mu.RUnlock()
 
 	resultado := make([]model.InformacionSalud, 0, len(r.registros))
 	for _, reg := range r.registros {
-		resultado = append(resultado, reg)
+		resultado = append(resultado, copiarRegistro(reg))
 	}
 	return resultado
 }
 
 func (r *memoriaRepository) Obtener(id string) (model.InformacionSalud, bool) {
-	r.mu.Lock()
-	defer r.mu.Unlock()
+	r.mu.RLock()
+	defer r.mu.RUnlock()
 
 	reg, ok := r.registros[id]
-	return reg, ok
+	if !ok {
+		return model.InformacionSalud{}, false
+	}
+	return copiarRegistro(reg), true
 }
 
 func (r *memoriaRepository) Guardar(registro model.InformacionSalud) {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
-	r.registros[registro.ID] = registro
+	r.registros[registro.ID] = copiarRegistro(registro)
 }
 
 func (r *memoriaRepository) SiguienteID() string {
@@ -68,4 +72,17 @@ func (r *memoriaRepository) SiguienteID() string {
 	id := strconv.Itoa(r.siguienteID)
 	r.siguienteID++
 	return id
+}
+
+// copiarRegistro devuelve una copia profunda de las listas del
+// registro, para que quien reciba el valor (de Listar, Obtener o
+// Guardar) no pueda mutar por accidente el estado interno del
+// repository a través de sus slices.
+func copiarRegistro(reg model.InformacionSalud) model.InformacionSalud {
+	copia := reg
+	copia.Diagnosticos = append([]string(nil), reg.Diagnosticos...)
+	copia.Alergias = append([]string(nil), reg.Alergias...)
+	copia.EnfermedadesCronicas = append([]string(nil), reg.EnfermedadesCronicas...)
+	copia.AntecedentesMedicos = append([]string(nil), reg.AntecedentesMedicos...)
+	return copia
 }
