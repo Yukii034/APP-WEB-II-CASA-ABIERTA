@@ -32,36 +32,36 @@ Puedes probar manualmente el flujo del servicio ejecutando estos comandos en tu 
 bash
 curl -X GET http://localhost:8087/health
 
-### Obtener historial
+### 2. Obtener historial
 
 curl -X GET http://localhost:8087/api/estado-animo
 
 
-### Registrar Estado de Ánimo (POST)
+### 3. Registrar Estado de Ánimo (POST)
 
 curl -X POST http://localhost:8087/api/estado-animo \
      -H "Content-Type: application/json" \
      -d '{"nivel": 1, "emocion": "Triste", "comentario": "Me siento muy desanimado"}'
 
 
-### Consultar Activación de Alertas
+### 4. Consultar Activación de Alertas
 
 curl -X GET http://localhost:8087/api/estado-animo/alertas
 
 
-### Pruebas Unitarias (Automáticas)
+### 5. Pruebas Unitarias (Automáticas)
 
-go test ./... -v
+go test ./...
 
 
-## Cómo correrlo solo (sin docker-compose)
+## 6. Cómo correrlo solo (sin docker-compose)
 
 bash
 cd services/estado-animo
 go run main.go
 
 
-## Cómo correrlo solo con docker-compose
+## 7. Cómo correrlo solo con docker-compose
 
 docker build -t estado-animo .
 docker run -p 8087:8080 estado-animo
