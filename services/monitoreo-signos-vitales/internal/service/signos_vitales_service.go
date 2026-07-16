@@ -73,18 +73,18 @@ func (s *SignosVitalesService) Tendencia(idAdultoMayor, parametro string, dias i
 // In production those ranges should be supplied by a configurable clinical catalog.
 func Evaluar(registro models.SignosVitales) models.EvaluacionRegistro {
 	valores := []models.EvaluacionValor{
-		{"presion_sistolica", clasificar(float64(registro.PresionSistolica), 100, 135, 90, 160)},
-		{"presion_diastolica", clasificar(float64(registro.PresionDiastolica), 60, 88, 50, 100)},
-		{"frecuencia_cardiaca", clasificar(float64(registro.FrecuenciaCardiaca), 55, 95, 45, 120)},
+		{Parametro: "presion_sistolica", Estado: clasificar(float64(registro.PresionSistolica), 100, 135, 90, 160)},
+		{Parametro: "presion_diastolica", Estado: clasificar(float64(registro.PresionDiastolica), 60, 88, 50, 100)},
+		{Parametro: "frecuencia_cardiaca", Estado: clasificar(float64(registro.FrecuenciaCardiaca), 55, 95, 45, 120)},
 	}
 	if registro.Temperatura != nil {
-		valores = append(valores, models.EvaluacionValor{"temperatura", clasificar(*registro.Temperatura, 36, 37.4, 35, 38.3)})
+		valores = append(valores, models.EvaluacionValor{Parametro: "temperatura", Estado: clasificar(*registro.Temperatura, 36, 37.4, 35, 38.3)})
 	}
 	if registro.SaturacionOxigeno != nil {
-		valores = append(valores, models.EvaluacionValor{"saturacion_oxigeno", clasificar(float64(*registro.SaturacionOxigeno), 93, 100, 88, 101)})
+		valores = append(valores, models.EvaluacionValor{Parametro: "saturacion_oxigeno", Estado: clasificar(float64(*registro.SaturacionOxigeno), 93, 100, 88, 101)})
 	}
 	if registro.NivelGlucosa != nil {
-		valores = append(valores, models.EvaluacionValor{"nivel_glucosa", clasificar(*registro.NivelGlucosa, 70, 140, 55, 200)})
+		valores = append(valores, models.EvaluacionValor{Parametro: "nivel_glucosa", Estado: clasificar(*registro.NivelGlucosa, 70, 140, 55, 200)})
 	}
 	general := models.EstadoNormal
 	for _, valor := range valores {
