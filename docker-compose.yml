@@ -131,6 +131,15 @@ services:
     ports:
       - "8083:8080"
 
+  estimulacion-cognitiva:
+    build: ./services/estimulacion-cognitiva
+    environment:
+      - PORT=8080
+    networks:
+      - cuidabien-net
+    ports:
+      - "8095:8080"
+
   gateway:
     build: ./services/gateway
     environment:
@@ -146,6 +155,7 @@ services:
       - REPORTES_MEDICOS_URL=http://reportes-medicos:8080
       - CONTACTO_EMERGENCIA_URL=http://contacto-emergencia:8080
       - ACTIVIDAD_FISICA_URL=http://actividad-fisica:8080
+      - ESTIMULACION_COGNITIVA_URL=http://estimulacion-cognitiva:8080
       # Aquí se van agregando las URLs de los demás servicios:
       # - EMERGENCIA_URL=http://emergencia:8080
       # - MONITOREO_URL=http://monitoreo:8080
@@ -161,6 +171,7 @@ services:
       - recordatorios-medicamentos
       - contacto-emergencia
       - actividad-fisica
+      - estimulacion-cognitiva
     networks:
       - cuidabien-net
     ports:
