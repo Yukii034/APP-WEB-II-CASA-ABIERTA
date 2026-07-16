@@ -1,0 +1,13 @@
+mode: set
+cuidabien/informacion-salud/internal/repository/memoria.go:32.42,37.2 1 1
+cuidabien/informacion-salud/internal/repository/memoria.go:39.63,44.34 4 1
+cuidabien/informacion-salud/internal/repository/memoria.go:44.34,46.3 1 1
+cuidabien/informacion-salud/internal/repository/memoria.go:47.2,47.18 1 1
+cuidabien/informacion-salud/internal/repository/memoria.go:50.79,55.9 4 1
+cuidabien/informacion-salud/internal/repository/memoria.go:55.9,57.3 1 1
+cuidabien/informacion-salud/internal/repository/memoria.go:58.2,58.34 1 1
+cuidabien/informacion-salud/internal/repository/memoria.go:61.70,66.2 3 1
+cuidabien/informacion-salud/internal/repository/memoria.go:68.50,75.2 5 1
+cuidabien/informacion-salud/internal/repository/memoria.go:81.72,88.2 6 1
+cuidabien/informacion-salud/internal/repository/seed.go:12.31,39.35 3 1
+cuidabien/informacion-salud/internal/repository/seed.go:39.35,43.3 3 1

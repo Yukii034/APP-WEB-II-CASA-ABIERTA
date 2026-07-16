@@ -101,6 +101,26 @@ func TestActualizarRegistro(t *testing.T) {
 			t.Errorf("esperaba que igual se actualice la fecha a %v, obtuve %v", ahora, actualizado.ActualizadoEn)
 		}
 	})
+
+	t.Run("actualiza los demás campos enviados", func(t *testing.T) {
+		entrada := model.EntradaInformacionSalud{
+			NombrePaciente:       "María González",
+			EnfermedadesCronicas: []string{"asma"},
+			AntecedentesMedicos:  []string{"cirugía de rodilla 2020"},
+		}
+
+		actualizado := actualizarRegistro(original, entrada, ahora)
+
+		if actualizado.NombrePaciente != "María González" {
+			t.Errorf("esperaba actualizar el nombre, obtuve %s", actualizado.NombrePaciente)
+		}
+		if len(actualizado.EnfermedadesCronicas) != 1 || actualizado.EnfermedadesCronicas[0] != "asma" {
+			t.Errorf("esperaba actualizar enfermedades crónicas, obtuve %v", actualizado.EnfermedadesCronicas)
+		}
+		if len(actualizado.AntecedentesMedicos) != 1 || actualizado.AntecedentesMedicos[0] != "cirugía de rodilla 2020" {
+			t.Errorf("esperaba actualizar antecedentes médicos, obtuve %v", actualizado.AntecedentesMedicos)
+		}
+	})
 }
 
 func TestNormalizarConvierteNilEnListaVacia(t *testing.T) {

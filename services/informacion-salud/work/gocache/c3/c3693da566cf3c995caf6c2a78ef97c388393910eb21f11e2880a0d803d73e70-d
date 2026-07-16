@@ -1,0 +1,93 @@
+//line C:\Users\ASUS\Desktop\SEXTO SEMESTRE\APLICACIONES WEB II\APP-WEB-II-CASA-ABIERTA\services\informacion-salud\internal\repository\memoria.go:1:1
+package repository
+
+import (
+	"strconv"
+	"sync"
+
+	"cuidabien/informacion-salud/internal/model"
+)
+
+// Repository define las operaciones de persistencia que necesita el
+// service, sin importarle cómo están implementadas. Hoy solo existe
+// memoriaRepository, pero mañana se podría agregar una implementación
+// con base de datos sin tocar el service ni los handlers.
+type Repository interface {
+	Listar() []model.InformacionSalud
+	Obtener(id string) (model.InformacionSalud, bool)
+	Guardar(registro model.InformacionSalud)
+	SiguienteID() string
+}
+
+// memoriaRepository guarda las fichas en un mapa en memoria, protegido
+// con un RWMutex para uso concurrente (múltiples lecturas en paralelo,
+// una sola escritura a la vez). Los datos se pierden si el contenedor
+// se reinicia (ver docs/arquitectura.md - limitaciones).
+type memoriaRepository struct {
+	mu          sync.RWMutex
+	registros   map[string]model.InformacionSalud
+	siguienteID int
+}
+
+// NuevaMemoriaRepository crea un Repository respaldado en memoria.
+func NuevaMemoriaRepository() Repository {goCover_6506ed7feff0__0[0] = 1 ; goCover_6506ed7feff0__0[1] = goCover_6506ed7feff0_P ; goCover_6506ed7feff0__0[2] = 0 ; goCover_6506ed7feff0__0[3] = 1;
+	return &memoriaRepository{
+		registros:   map[string]model.InformacionSalud{},
+		siguienteID: 1,
+	}
+}
+
+// Listar devuelve copias de las fichas para preservar el estado interno.
+func (r *memoriaRepository) Listar() []model.InformacionSalud {goCover_6506ed7feff0__1[0] = 3 ; goCover_6506ed7feff0__1[1] = goCover_6506ed7feff0_P ; goCover_6506ed7feff0__1[2] = 1 ; goCover_6506ed7feff0__1[3] = 1;
+	r.mu.RLock()
+	defer r.mu.RUnlock()
+
+	resultado := make([]model.InformacionSalud, 0, len(r.registros))
+	for _, reg := range r.registros {goCover_6506ed7feff0__1[5] = 1;
+		resultado = append(resultado, copiarRegistro(reg))
+	}
+	goCover_6506ed7feff0__1[4] = 1;return resultado
+}
+
+// Obtener busca una ficha y también devuelve una copia independiente.
+func (r *memoriaRepository) Obtener(id string) (model.InformacionSalud, bool) {goCover_6506ed7feff0__2[0] = 3 ; goCover_6506ed7feff0__2[1] = goCover_6506ed7feff0_P ; goCover_6506ed7feff0__2[2] = 2 ; goCover_6506ed7feff0__2[3] = 1;
+	r.mu.RLock()
+	defer r.mu.RUnlock()
+
+	reg, ok := r.registros[id]
+	if !ok {goCover_6506ed7feff0__2[5] = 1;
+		return model.InformacionSalud{}, false
+	}
+	goCover_6506ed7feff0__2[4] = 1;return copiarRegistro(reg), true
+}
+
+// Guardar almacena una copia para evitar que el llamador altere los datos guardados.
+func (r *memoriaRepository) Guardar(registro model.InformacionSalud) {goCover_6506ed7feff0__3[0] = 1 ; goCover_6506ed7feff0__3[1] = goCover_6506ed7feff0_P ; goCover_6506ed7feff0__3[2] = 3 ; goCover_6506ed7feff0__3[3] = 1;
+	r.mu.Lock()
+	defer r.mu.Unlock()
+
+	r.registros[registro.ID] = copiarRegistro(registro)
+}
+
+// SiguienteID genera identificadores consecutivos de forma segura.
+func (r *memoriaRepository) SiguienteID() string {goCover_6506ed7feff0__4[0] = 1 ; goCover_6506ed7feff0__4[1] = goCover_6506ed7feff0_P ; goCover_6506ed7feff0__4[2] = 4 ; goCover_6506ed7feff0__4[3] = 1;
+	r.mu.Lock()
+	defer r.mu.Unlock()
+
+	id := strconv.Itoa(r.siguienteID)
+	r.siguienteID++
+	return id
+}
+
+// copiarRegistro devuelve una copia profunda de las listas del
+// registro, para que quien reciba el valor (de Listar, Obtener o
+// Guardar) no pueda mutar por accidente el estado interno del
+// repository a través de sus slices.
+func copiarRegistro(reg model.InformacionSalud) model.InformacionSalud {goCover_6506ed7feff0__5[0] = 1 ; goCover_6506ed7feff0__5[1] = goCover_6506ed7feff0_P ; goCover_6506ed7feff0__5[2] = 5 ; goCover_6506ed7feff0__5[3] = 1;
+	copia := reg
+	copia.Diagnosticos = append([]string(nil), reg.Diagnosticos...)
+	copia.Alergias = append([]string(nil), reg.Alergias...)
+	copia.EnfermedadesCronicas = append([]string(nil), reg.EnfermedadesCronicas...)
+	copia.AntecedentesMedicos = append([]string(nil), reg.AntecedentesMedicos...)
+	return copia
+}

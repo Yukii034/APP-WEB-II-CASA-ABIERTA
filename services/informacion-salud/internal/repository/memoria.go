@@ -36,6 +36,7 @@ func NuevaMemoriaRepository() Repository {
 	}
 }
 
+// Listar devuelve copias de las fichas para preservar el estado interno.
 func (r *memoriaRepository) Listar() []model.InformacionSalud {
 	r.mu.RLock()
 	defer r.mu.RUnlock()
@@ -47,6 +48,7 @@ func (r *memoriaRepository) Listar() []model.InformacionSalud {
 	return resultado
 }
 
+// Obtener busca una ficha y también devuelve una copia independiente.
 func (r *memoriaRepository) Obtener(id string) (model.InformacionSalud, bool) {
 	r.mu.RLock()
 	defer r.mu.RUnlock()
@@ -58,6 +60,7 @@ func (r *memoriaRepository) Obtener(id string) (model.InformacionSalud, bool) {
 	return copiarRegistro(reg), true
 }
 
+// Guardar almacena una copia para evitar que el llamador altere los datos guardados.
 func (r *memoriaRepository) Guardar(registro model.InformacionSalud) {
 	r.mu.Lock()
 	defer r.mu.Unlock()
@@ -65,6 +68,7 @@ func (r *memoriaRepository) Guardar(registro model.InformacionSalud) {
 	r.registros[registro.ID] = copiarRegistro(registro)
 }
 
+// SiguienteID genera identificadores consecutivos de forma segura.
 func (r *memoriaRepository) SiguienteID() string {
 	r.mu.Lock()
 	defer r.mu.Unlock()
