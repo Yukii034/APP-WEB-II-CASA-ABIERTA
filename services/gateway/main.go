@@ -49,7 +49,6 @@ func healthHandler(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(map[string]string{"status": "ok"})
 }
 
-<<<<<<< HEAD
 // Proxy al microservicio de citas medicas.
 // Reenvia la peticion completa (metodo, body, path) al servicio de citas.
 func citasHandler(w http.ResponseWriter, r *http.Request) {
@@ -167,7 +166,8 @@ func informacionSaludHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(resp.StatusCode)
 	w.Write(body)
-=======
+}
+
 // Proxy generico: reenvia la peticion al servicio indicado en la variable de entorno.
 func proxyHandler(envVar string) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -207,7 +207,6 @@ func proxyHandler(envVar string) http.HandlerFunc {
 		w.WriteHeader(resp.StatusCode)
 		w.Write(body)
 	}
->>>>>>> 17a3ce9c5a07b9594e191e85a655ffc389c07547
 }
 
 // Proxy al microservicio de recordatorio de medicamentos.
