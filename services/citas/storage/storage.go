@@ -21,7 +21,16 @@ type Store struct {
 }
 
 func NewStore() *Store {
+	hoy := time.Now().Format("2006-01-02")
+	manana := time.Now().AddDate(0, 0, 1).Format("2006-01-02")
+	pasadoManana := time.Now().AddDate(0, 0, 2).Format("2006-01-02")
+
 	return &Store{
+		Citas: []models.Cita{
+			{ID: "C001", PacienteID: "P001", DoctorID: "D002", Fecha: hoy, Hora: "09:30", Estado: "confirmada", Prioridad: "control", Motivo: "Control cardiologico mensual"},
+			{ID: "C002", PacienteID: "P002", DoctorID: "D003", Fecha: manana, Hora: "11:00", Estado: "pendiente", Prioridad: "normal", Motivo: "Revision geriatrica"},
+			{ID: "C003", PacienteID: "P003", DoctorID: "D001", Fecha: pasadoManana, Hora: "15:30", Estado: "confirmada", Prioridad: "normal", Motivo: "Chequeo general"},
+		},
 		Pacientes: []models.Paciente{
 			{ID: "P001", Nombre: "Maria Garcia", Telefono: "555-0101", ContactoEmergencia: "555-0102", Alergias: []string{"Penicilina"}},
 			{ID: "P002", Nombre: "Juan Lopez", Telefono: "555-0201", ContactoEmergencia: "555-0202", Alergias: []string{}},
@@ -32,8 +41,9 @@ func NewStore() *Store {
 			{ID: "D002", Nombre: "Dra. Laura Fernandez", Especialidad: "Cardiologia"},
 			{ID: "D003", Nombre: "Dr. Pedro Sanchez", Especialidad: "Gerontologia"},
 		},
-		NextID:    1,
-		TodayDate: time.Now().Format("2006-01-02"),
+		NextID:       4,
+		TodayCreated: 3,
+		TodayDate:    hoy,
 	}
 }
 
@@ -71,12 +81,7 @@ func (s *Store) FindDoctorByID(id string) *models.Doctor {
 }
 
 func InformacionSaludIDPorPaciente(pacienteID string) string {
-	mapeo := map[string]string{
-		"P001": "1",
-		"P002": "2",
-		"P003": "3",
-	}
-	return mapeo[pacienteID]
+	return pacienteID
 }
 
 func (s *Store) EsFechaPasada(fecha, hora string) bool {

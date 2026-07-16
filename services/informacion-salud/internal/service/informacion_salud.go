@@ -25,7 +25,11 @@ func (s *InformacionSaludService) Listar() []model.InformacionSalud {
 
 // Crear registra una nueva ficha de salud.
 func (s *InformacionSaludService) Crear(entrada model.EntradaInformacionSalud) model.InformacionSalud {
-	nuevo := nuevoRegistro(s.repo.SiguienteID(), entrada, time.Now())
+	id := entrada.PacienteID
+	if id == "" {
+		id = s.repo.SiguienteID()
+	}
+	nuevo := nuevoRegistro(id, entrada, time.Now())
 	s.repo.Guardar(nuevo)
 	return nuevo
 }

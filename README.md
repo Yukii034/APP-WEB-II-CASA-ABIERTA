@@ -96,9 +96,9 @@ Esto levanta todos los servicios definidos en `docker-compose.yml`. El gateway q
 | reportes (equipo) | 8088 | ✅ activo |
 | Recordatorio de medicamentos | 8089 | ✅ activo |
 | actividad física | 8090 | ✅ activo |
+| estimulacion cognitiva | 8095 | ✅ activo |
 | contacto emergencia | 8097 | ✅ activo |
 | cuidadores | 8099 | ✅ activo |
-| estimulacion cognitiva | 8095 | ✅ activo |
 
 > Antes de asignarte un puerto, revisa esta tabla y actualízala en tu PR para evitar choques con otro equipo.
 
@@ -142,6 +142,7 @@ cuidabien/
 | Servicio | Responsable(s) |
 |----------|----------------|
 | Gateway / base del repo | [Pierina Peñaherrera] |
+| Frontend |  [José Manuel Castillo loor] |
 | Informacion de salud | [Nahim Simba, Jostin Alvarado, Daivelyn Pincay, Joseph Paredes, Cristina Cedeño] |
 | Contacto de emergencia | [Luis Litardo, Steven Soledispa, Ronnie Mera] |
 | Alimentos | [Eduardo Lopez, Pierina Peñaherrera, José Manuel Castillo, Néstor Gallegos] |
@@ -149,6 +150,8 @@ cuidabien/
 | Citas médicas | [Anthony Mendoza - Deimuz, Holguin Nathaly Jasmin, Cedeño Geovanny Alexander] |
 | Estado animo |  [Danny Zambrano, Michael Cedeño] |
 | Recordatorio de medicamentos | [Manuel Intriago, Madelyn Zambrano, Michelle Salazar] |
-| Cuidadores | Jeremy (S3N-SHI) |
-| Estimulación cognitiva | Bryan López  -  Isaac Sornoza  -  Eduardo Flores |
+| Cuidadores | [Jeremy (S3N-SHI)] |
+| Estimulación cognitiva | [Bryan López  -  Isaac Sornoza  -  Eduardo Flores] |
 | Monitoreo de signos vitales | [Anthony Macias, Winter Povea, Montecé Frank, Hector Fernandez] |
+| Actividad fisica | [Melanie Anchundia, Lisbeth Aray] |
+| Reportes | [Anthony Mendoza - Deimuz] |

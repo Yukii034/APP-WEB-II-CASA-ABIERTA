@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CuidaBien - Sistema de Cuidado del Adulto Mayor</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <header class="header">
+    <div class="header-left">
+      <div class="logo">
+        <img src="logo-cuidabien.svg" alt="Logo CuidaBien" class="app-logo">
+        <h1>CuidaBien</h1>
+      </div>
+    </div>
+    <div class="header-center">
+      <span class="header-subtitle">Sistema de Cuidado Integral del Adulto Mayor</span>
+    </div>
+    <div class="header-right">
+      <span class="status-indicator" id="apiStatus">
+        <span class="status-dot"></span>
+        Conectado
+      </span>
+      <span class="header-date" id="currentDate"></span>
+    </div>
+  </header>
+
+  <main class="main-content">
+    <button class="emergency-button" onclick="openEmergencySelector()" title="Activar alerta de emergencia">
+      SOS Emergencia
+    </button>
+
+    <section class="welcome-section">
+      <h2>Bienvenido al Panel de Control</h2>
+      <p>Seleccione un servicio para ver los detalles y gestionar la informacion del adulto mayor.</p>
+    </section>
+
+    <section class="stats-bar" id="statsBar">
+      <div class="stat-card">
+        <span class="stat-number" id="statPacientes">3</span>
+        <span class="stat-label">Pacientes</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-number" id="statCitas">--</span>
+        <span class="stat-label">Citas Hoy</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-number" id="statAlertas">--</span>
+        <span class="stat-label">Alertas</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-number" id="statComidas">--</span>
+        <span class="stat-label">Comidas Hoy</span>
+      </div>
+    </section>
+
+    <section class="services-grid" id="servicesGrid">
+
+      <div class="service-card" data-service="citas" onclick="openModal('citas')">
+        <div class="card-icon citas-icon">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/>
+            <line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+            <circle cx="12" cy="16" r="2"/>
+          </svg>
+        </div>
+        <h3>Citas Medicas</h3>
+        <p>Gestion de citas con doctores</p>
+        <span class="card-badge" id="badgeCitas">--</span>
+      </div>
+
+      <div class="service-card" data-service="salud" onclick="openModal('salud')">
+        <div class="card-icon salud-icon">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+          </svg>
+        </div>
+        <h3>Informacion de Salud</h3>
+        <p>Historial clinico y diagnosticos</p>
+        <span class="card-badge">3 registros</span>
+      </div>
+
+      <div class="service-card" data-service="vitales" onclick="openModal('vitales')">
+        <div class="card-icon vitales-icon">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+          </svg>
+        </div>
+        <h3>Signos Vitales</h3>
+        <p>Monitoreo de presion, temperatura, pulso</p>
+        <span class="card-badge">3 registros</span>
+      </div>
+
+      <div class="service-card" data-service="alimentacion" onclick="openModal('alimentacion')">
+        <div class="card-icon alimentacion-icon">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 8h1a4 4 0 0 1 0 8h-1"/>
+            <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/>
+            <line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/>
+            <line x1="14" y1="1" x2="14" y2="4"/>
+          </svg>
+        </div>
+        <h3>Alimentacion</h3>
+        <p>Control de comidas e hidratacion</p>
+        <span class="card-badge" id="badgeAlim">--</span>
+      </div>
+
+      <div class="service-card" data-service="estado-animo" onclick="openModal('estado-animo')">
+        <div class="card-icon animo-icon">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M8 14s1.5 2 4 2 4-2 4-2"/>
+            <line x1="9" y1="9" x2="9.01" y2="9"/>
+            <line x1="15" y1="9" x2="15.01" y2="9"/>
+          </svg>
+        </div>
+        <h3>Estado de Animo</h3>
+        <p>Seguimiento del bienestar emocional</p>
+        <span class="card-badge" id="badgeAnimo">--</span>
+      </div>
+
+      <div class="service-card" data-service="recordatorios" onclick="openModal('recordatorios')">
+        <div class="card-icon recordatorios-icon">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+            <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+          </svg>
+        </div>
+        <h3>Recordatorios</h3>
+        <p>Alertas de medicamentos</p>
+        <span class="card-badge" id="badgeRec">--</span>
+      </div>
+
+      <div class="service-card" data-service="ejercicios" onclick="openModal('ejercicios')">
+        <div class="card-icon ejercicios-icon">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+          </svg>
+        </div>
+        <h3>Estimulacion Cognitiva</h3>
+        <p>Ejercicios mentales y trivia</p>
+        <span class="card-badge" id="badgeEjerc">--</span>
+      </div>
+
+      <div class="service-card" data-service="actividad" onclick="openModal('actividad')">
+        <div class="card-icon actividad-icon">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="5" r="2"/>
+            <path d="M7 21l3-9 2.5 2 2.5-2 3 9"/>
+            <path d="M5 12h14"/>
+          </svg>
+        </div>
+        <h3>Actividad Fisica</h3>
+        <p>Registro de ejercicios y caminatas</p>
+        <span class="card-badge" id="badgeActiv">--</span>
+      </div>
+
+      <div class="service-card" data-service="reportes" onclick="openModal('reportes')">
+        <div class="card-icon reportes-icon">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+            <line x1="16" y1="13" x2="8" y2="13"/>
+            <line x1="16" y1="17" x2="8" y2="17"/>
+            <polyline points="10 9 9 9 8 9"/>
+          </svg>
+        </div>
+        <h3>Reportes</h3>
+        <p>Resumen semanal y dashboard</p>
+        <span class="card-badge">Dashboard</span>
+      </div>
+
+      <div class="service-card" data-service="emergencia" onclick="openModal('emergencia')">
+        <div class="card-icon emergencia-icon">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+          </svg>
+        </div>
+        <h3>Contacto de Emergencia</h3>
+        <p>Contactos y alertas de emergencia</p>
+        <span class="card-badge" id="badgeEmerg">--</span>
+      </div>
+
+      <div class="service-card" data-service="cuidadores" onclick="openModal('cuidadores')">
+        <div class="card-icon cuidadores-icon">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+          </svg>
+        </div>
+        <h3>Cuidadores</h3>
+        <p>Personal de cuidado asignado</p>
+        <span class="card-badge" id="badgeCuid">--</span>
+      </div>
+
+      <div class="service-card" data-service="reportes-medicos" onclick="openModal('reportes-medicos')">
+        <div class="card-icon repmed-icon">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M9 12l2 2 4-4"/>
+            <path d="M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/>
+          </svg>
+        </div>
+        <h3>Reportes Medicos</h3>
+        <p>Resumenes clinicos por paciente</p>
+        <span class="card-badge">2 reportes</span>
+      </div>
+
+    </section>
+  </main>
+
+  <!-- MODAL BACKDROP -->
+  <div class="modal-backdrop" id="modalBackdrop" onclick="closeModal()"></div>
+
+  <!-- MODAL CONTAINER -->
+  <div class="modal" id="modal">
+    <div class="modal-header">
+      <h2 id="modalTitle">Titulo</h2>
+      <button class="modal-close" onclick="closeModal()">&times;</button>
+    </div>
+    <div class="modal-body" id="modalBody">
+      <!-- Contenido dinamico -->
+    </div>
+  </div>
+
+  <footer class="footer">
+    <p>CuidaBien &copy; 2026 - Sistema de Cuidado Integral del Adulto Mayor | Casa Abierta</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

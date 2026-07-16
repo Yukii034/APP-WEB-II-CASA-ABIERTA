@@ -119,18 +119,22 @@ func TestSembrarAgregaExactamenteLosRegistrosEsperados(t *testing.T) {
 		t.Fatalf("esperaba exactamente 3 registros sembrados, obtuve %d", len(lista))
 	}
 
-	nombres := map[string]bool{}
+	registros := map[string]string{}
 	for _, reg := range lista {
 		if reg.ID == "" {
 			t.Errorf("esperaba que cada registro sembrado tenga id, obtuve uno vacío: %+v", reg)
 		}
-		nombres[reg.NombrePaciente] = true
+		registros[reg.ID] = reg.NombrePaciente
 	}
 
-	esperados := []string{"María Pérez", "José Ramírez", "Carmen Torres"}
-	for _, nombre := range esperados {
-		if !nombres[nombre] {
-			t.Errorf("esperaba encontrar a %q entre los sembrados, no apareció", nombre)
+	esperados := map[string]string{
+		"P001": "Maria Garcia",
+		"P002": "Juan Lopez",
+		"P003": "Ana Martinez",
+	}
+	for id, nombre := range esperados {
+		if registros[id] != nombre {
+			t.Errorf("esperaba encontrar %s con nombre %q, obtuve %q", id, nombre, registros[id])
 		}
 	}
 }

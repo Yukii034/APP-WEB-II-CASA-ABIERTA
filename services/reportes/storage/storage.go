@@ -13,10 +13,9 @@ import (
 )
 
 type Store struct {
-	Pacientes     []models.Paciente
-	NextReportID  int
-	CitasURL      string
-	MedicamentosURL string
+	Pacientes      []models.Paciente
+	NextReportID   int
+	CitasURL       string
 	AlimentacionURL string
 }
 
@@ -29,7 +28,6 @@ func NewStore() *Store {
 		},
 		NextReportID:    1,
 		CitasURL:        os.Getenv("CITAS_URL"),
-		MedicamentosURL: os.Getenv("MEDICAMENTOS_URL"),
 		AlimentacionURL: os.Getenv("ALIMENTACION_URL"),
 	}
 }
@@ -43,7 +41,7 @@ func (s *Store) FindPacienteByID(id string) *models.Paciente {
 	return nil
 }
 
-// ==================== Clientes HTTP para otros servicios ====================
+// ==================== Clientes HTTP ====================
 
 func (s *Store) fetchJSON(url string, target interface{}) error {
 	if url == "" {
@@ -81,7 +79,7 @@ type citaAPI struct {
 
 func (s *Store) ObtenerCitas(pacienteID string) []citaAPI {
 	var citas []citaAPI
-	url := s.CitasURL + "/api/appointments?paciente_id=" + pacienteID
+	url := s.CitasURL + "/api/cita-medica/paciente/" + pacienteID
 	if err := s.fetchJSON(url, &citas); err != nil {
 		return s.citasSimuladas(pacienteID)
 	}
@@ -90,7 +88,7 @@ func (s *Store) ObtenerCitas(pacienteID string) []citaAPI {
 
 func (s *Store) ObtenerTodasCitas() []citaAPI {
 	var citas []citaAPI
-	url := s.CitasURL + "/api/appointments"
+	url := s.CitasURL + "/api/cita-medica"
 	if err := s.fetchJSON(url, &citas); err != nil {
 		return s.todasCitasSimuladas()
 	}
@@ -100,20 +98,20 @@ func (s *Store) ObtenerTodasCitas() []citaAPI {
 func (s *Store) citasSimuladas(pacienteID string) []citaAPI {
 	hoy := time.Now().Format("2006-01-02")
 	manana := time.Now().AddDate(0, 0, 1).Format("2006-01-02")
-AYER := time.Now().AddDate(0, 0, -1).Format("2006-01-02")
+	ayer := time.Now().AddDate(0, 0, -1).Format("2006-01-02")
 	semana := time.Now().AddDate(0, 0, 7).Format("2006-01-02")
 
 	switch pacienteID {
 	case "P001":
 		return []citaAPI{
-			{ID: "C001", PacienteID: "P001", DoctorID: "D001", Fecha: AYER, Hora: "10:00", Estado: "completada", Prioridad: "normal"},
+			{ID: "C001", PacienteID: "P001", DoctorID: "D001", Fecha: ayer, Hora: "10:00", Estado: "completada", Prioridad: "normal"},
 			{ID: "C002", PacienteID: "P001", DoctorID: "D002", Fecha: manana, Hora: "09:00", Estado: "pendiente", Prioridad: "urgente"},
 			{ID: "C003", PacienteID: "P001", DoctorID: "D001", Fecha: semana, Hora: "10:00", Estado: "pendiente", Prioridad: "control"},
 		}
 	case "P002":
 		return []citaAPI{
 			{ID: "C004", PacienteID: "P002", DoctorID: "D003", Fecha: hoy, Hora: "11:00", Estado: "confirmada", Prioridad: "normal"},
-			{ID: "C005", PacienteID: "P002", DoctorID: "D001", Fecha: AYER, Hora: "08:00", Estado: "cancelada", Prioridad: "normal"},
+			{ID: "C005", PacienteID: "P002", DoctorID: "D001", Fecha: ayer, Hora: "08:00", Estado: "cancelada", Prioridad: "normal"},
 		}
 	case "P003":
 		return []citaAPI{
@@ -129,120 +127,6 @@ func (s *Store) todasCitasSimuladas() []citaAPI {
 		todas = append(todas, s.citasSimuladas(p.ID)...)
 	}
 	return todas
-}
-
-// ==================== Medicamentos ====================
-
-type medicamentoAPI struct {
-	ID         string   `json:"id"`
-	PacienteID string   `json:"paciente_id"`
-	Nombre     string   `json:"nombre"`
-	Dosis      string   `json:"dosis"`
-	Estado     string   `json:"estado"`
-}
-
-type tomaAPI struct {
-	ID            string `json:"id"`
-	MedicamentoID string `json:"medicamento_id"`
-	Estado        string `json:"estado"`
-}
-
-type adherenciaAPI struct {
-	PacienteID       string  `json:"paciente_id"`
-	TotalTomas       int     `json:"total_tomas"`
-	TomasCumplidas   int     `json:"tomas_cumplidas"`
-	Porcentaje       float64 `json:"porcentaje"`
-}
-
-type alertaAPI struct {
-	ID       string `json:"id"`
-	Tipo     string `json:"tipo"`
-	Mensaje  string `json:"mensaje"`
-	Leida    bool   `json:"leida"`
-}
-
-func (s *Store) ObtenerMedicamentos(pacienteID string) []medicamentoAPI {
-	var meds []medicamentoAPI
-	url := s.MedicamentosURL + "/api/medications?paciente_id=" + pacienteID
-	if err := s.fetchJSON(url, &meds); err != nil {
-		return s.medicamentosSimulados(pacienteID)
-	}
-	return meds
-}
-
-func (s *Store) ObtenerAdherencia(pacienteID string) adherenciaAPI {
-	var resultado adherenciaAPI
-	url := s.MedicamentosURL + "/api/medications/adherence/" + pacienteID
-	if err := s.fetchJSON(url, &resultado); err != nil {
-		return s.adherenciaSimulada(pacienteID)
-	}
-	return resultado
-}
-
-func (s *Store) ObtenerAlertasMedicamentos(pacienteID string) []alertaAPI {
-	var alertas []alertaAPI
-	url := s.MedicamentosURL + "/api/medications/alerts?paciente_id=" + pacienteID
-	if err := s.fetchJSON(url, &alertas); err != nil {
-		return s.alertasMedSimuladas(pacienteID)
-	}
-	return alertas
-}
-
-func (s *Store) ContarTodasAlertasMedicamentos() int {
-	var alertas []alertaAPI
-	url := s.MedicamentosURL + "/api/medications/alerts"
-	if err := s.fetchJSON(url, &alertas); err != nil {
-		return 3
-	}
-	count := 0
-	for _, a := range alertas {
-		if !a.Leida {
-			count++
-		}
-	}
-	return count
-}
-
-func (s *Store) medicamentosSimulados(pacienteID string) []medicamentoAPI {
-	switch pacienteID {
-	case "P001":
-		return []medicamentoAPI{
-			{ID: "M001", PacienteID: "P001", Nombre: "Losartan", Dosis: "50mg", Estado: "activo"},
-			{ID: "M002", PacienteID: "P001", Nombre: "Metformina", Dosis: "850mg", Estado: "activo"},
-		}
-	case "P002":
-		return []medicamentoAPI{
-			{ID: "M003", PacienteID: "P002", Nombre: "Aspirina", Dosis: "100mg", Estado: "activo"},
-			{ID: "M004", PacienteID: "P002", Nombre: "Ibuprofeno", Dosis: "400mg", Estado: "activo"},
-		}
-	case "P003":
-		return []medicamentoAPI{
-			{ID: "M005", PacienteID: "P003", Nombre: "Paracetamol", Dosis: "500mg", Estado: "activo"},
-			{ID: "M006", PacienteID: "P003", Nombre: "Omeprazol", Dosis: "20mg", Estado: "suspendido"},
-		}
-	}
-	return []medicamentoAPI{}
-}
-
-func (s *Store) adherenciaSimulada(pacienteID string) adherenciaAPI {
-	switch pacienteID {
-	case "P001":
-		return adherenciaAPI{PacienteID: "P001", TotalTomas: 14, TomasCumplidas: 12, Porcentaje: 85.7}
-	case "P002":
-		return adherenciaAPI{PacienteID: "P002", TotalTomas: 10, TomasCumplidas: 8, Porcentaje: 80.0}
-	case "P003":
-		return adherenciaAPI{PacienteID: "P003", TotalTomas: 21, TomasCumplidas: 21, Porcentaje: 100.0}
-	}
-	return adherenciaAPI{PacienteID: pacienteID, TotalTomas: 0, TomasCumplidas: 0, Porcentaje: 0}
-}
-
-func (s *Store) alertasMedSimuladas(pacienteID string) []alertaAPI {
-	if pacienteID == "P002" {
-		return []alertaAPI{
-			{ID: "A001", Tipo: "por_vencer", Mensaje: "Ibuprofeno vence en 3 dias", Leida: false},
-		}
-	}
-	return []alertaAPI{}
 }
 
 // ==================== Alimentacion ====================
@@ -287,7 +171,7 @@ func (s *Store) alimentacionSimulada() resumenAlimAPI {
 	}
 }
 
-// ==================== Generación de Reportes ====================
+// ==================== Generacion de Reportes ====================
 
 func (s *Store) GenerarReporteSemanal(pacienteID string) models.ReporteSemanal {
 	paciente := s.FindPacienteByID(pacienteID)
@@ -303,15 +187,12 @@ func (s *Store) GenerarReporteSemanal(pacienteID string) models.ReporteSemanal {
 	citas := s.ObtenerCitas(pacienteID)
 	resCitas := s.agregarCitas(citas, fechaInicio, fechaFin)
 
-	meds := s.ObtenerMedicamentos(pacienteID)
-	adherencia := s.ObtenerAdherencia(pacienteID)
-	alertasMed := s.ObtenerAlertasMedicamentos(pacienteID)
-	resMeds := s.agregarMedicamentos(meds, adherencia, alertasMed)
-
 	resAlim := s.agregarAlimentacion(pacienteID)
 
+	resMeds := models.ResumenMedicamentos{}
+
 	estado := s.calcularEstadoGeneral(resCitas, resMeds, resAlim)
-	recomendacion := s.generarRecomendacion(resCitas, resMeds, resAlim)
+	recomendacion := s.generarRecomendacion(resCitas, resAlim)
 
 	return models.ReporteSemanal{
 		PacienteID:          pacienteID,
@@ -321,7 +202,7 @@ func (s *Store) GenerarReporteSemanal(pacienteID string) models.ReporteSemanal {
 		ResumenCitas:        resCitas,
 		ResumenMedicamentos: resMeds,
 		ResumenAlimentacion: resAlim,
-		ResumenSalud:        models.ResumenSalud{AlertasSalud: len(alertasMed), SignosVitalesOK: true},
+		ResumenSalud:        models.ResumenSalud{SignosVitalesOK: true},
 		EstadoGeneral:       estado,
 		Recomendacion:       recomendacion,
 	}
@@ -350,31 +231,6 @@ func (s *Store) agregarCitas(citas []citaAPI, fechaInicio, fechaFin string) mode
 		}
 	}
 	return res
-}
-
-func (s *Store) agregarMedicamentos(meds []medicamentoAPI, adherencia adherenciaAPI, alertas []alertaAPI) models.ResumenMedicamentos {
-	activos := 0
-	for _, m := range meds {
-		if m.Estado == "activo" {
-			activos++
-		}
-	}
-
-	alertasNoLeidas := 0
-	for _, a := range alertas {
-		if !a.Leida {
-			alertasNoLeidas++
-		}
-	}
-
-	return models.ResumenMedicamentos{
-		TotalActivos:         activos,
-		TomasRegistradas:     adherencia.TotalTomas,
-		TomasCumplidas:       adherencia.TomasCumplidas,
-		TomasNoCumplidas:     adherencia.TotalTomas - adherencia.TomasCumplidas,
-		PorcentajeAdherencia: adherencia.Porcentaje,
-		AlertasActivas:       alertasNoLeidas,
-	}
 }
 
 func (s *Store) agregarAlimentacion(pacienteID string) models.ResumenAlimentacion {
@@ -443,15 +299,9 @@ func (s *Store) calcularEstadoGeneral(citas models.ResumenCitas, meds models.Res
 	}
 }
 
-func (s *Store) generarRecomendacion(citas models.ResumenCitas, meds models.ResumenMedicamentos, alim models.ResumenAlimentacion) string {
+func (s *Store) generarRecomendacion(citas models.ResumenCitas, alim models.ResumenAlimentacion) string {
 	var recs []string
 
-	if meds.PorcentajeAdherencia < 80 {
-		recs = append(recs, "Mejorar la adherencia a la medicacion")
-	}
-	if meds.AlertasActivas > 0 {
-		recs = append(recs, "Revisar alertas de medicamentos pendientes")
-	}
 	if alim.ComidasSaltadas > 0 {
 		recs = append(recs, "No saltar comidas, mantener horarios regulares")
 	}
@@ -491,41 +341,24 @@ func (s *Store) GenerarReportePaciente(pacienteID string) models.ReportePaciente
 		})
 	}
 
-	meds := s.ObtenerMedicamentos(pacienteID)
-	adherencia := s.ObtenerAdherencia(pacienteID)
-	alertas := s.ObtenerAlertasMedicamentos(pacienteID)
 	comidas := s.ContarComidasPaciente(pacienteID)
-
-	var histMeds []models.ResumenMedicamento
-	for _, m := range meds {
-		histMeds = append(histMeds, models.ResumenMedicamento{
-			Nombre: m.Nombre, Dosis: m.Dosis, Estado: m.Estado, Adherencia: adherencia.Porcentaje,
-		})
-	}
-
-	alertasNoLeidas := 0
-	for _, a := range alertas {
-		if !a.Leida {
-			alertasNoLeidas++
-		}
-	}
 
 	return models.ReportePaciente{
 		PacienteID:           pacienteID,
 		PacienteNombre:       nombre,
 		TotalCitas:           totalCitas,
 		CitasCompletadas:     citasCompletadas,
-		TotalMedicamentos:    len(meds),
-		AdherenciaMedicacion: adherencia.Porcentaje,
+		TotalMedicamentos:    0,
+		AdherenciaMedicacion: 0,
 		ComidasRegistradas:   comidas,
-		AlertasActivas:       alertasNoLeidas,
-		EstadoGeneral:        s.calcularEstadoGeneral(models.ResumenCitas{TotalProgramadas: totalCitas, Completadas: citasCompletadas}, models.ResumenMedicamentos{PorcentajeAdherencia: adherencia.Porcentaje, AlertasActivas: alertasNoLeidas}, models.ResumenAlimentacion{ComidasRegistradas: comidas, ComidasEsperadas: 3}),
+		AlertasActivas:       0,
+		EstadoGeneral:        s.calcularEstadoGeneral(models.ResumenCitas{TotalProgramadas: totalCitas, Completadas: citasCompletadas}, models.ResumenMedicamentos{}, models.ResumenAlimentacion{ComidasRegistradas: comidas, ComidasEsperadas: 3}),
 		HistorialCitas:       histCitas,
-		HistorialMedicamentos: histMeds,
+		HistorialMedicamentos: nil,
 	}
 }
 
-// ==================== Dashboard / Resumen General ====================
+// ==================== Dashboard ====================
 
 func (s *Store) GenerarDashboard() models.DashboardData {
 	citas := s.ObtenerTodasCitas()
@@ -538,34 +371,10 @@ func (s *Store) GenerarDashboard() models.DashboardData {
 		}
 	}
 
-	totalMedsActivos := 0
+	var pacienteRes []models.PacienteResumen
+
 	for _, p := range s.Pacientes {
-		meds := s.ObtenerMedicamentos(p.ID)
-		for _, m := range meds {
-			if m.Estado == "activo" {
-				totalMedsActivos++
-			}
-		}
-	}
-
-	alertasTotales := s.ContarTodasAlertasMedicamentos()
-
-sumaAdherencia := 0.0
-pacientesConAlertas := 0
-var pacienteRes []models.PacienteResumen
-
-for _, p := range s.Pacientes {
-		adh := s.ObtenerAdherencia(p.ID)
-		alertas := s.ObtenerAlertasMedicamentos(p.ID)
-		meds := s.ObtenerMedicamentos(p.ID)
 		citasP := s.ObtenerCitas(p.ID)
-
-		activos := 0
-		for _, m := range meds {
-			if m.Estado == "activo" {
-				activos++
-			}
-		}
 
 		proximas := 0
 		for _, c := range citasP {
@@ -574,44 +383,20 @@ for _, p := range s.Pacientes {
 			}
 		}
 
-		alertasNoLeidas := 0
-		for _, a := range alertas {
-			if !a.Leida {
-				alertasNoLeidas++
-			}
-		}
-		if alertasNoLeidas > 0 {
-			pacientesConAlertas++
-		}
-
-		estado := "estable"
-		if adh.Porcentaje < 50 {
-			estado = "requiere_atencion"
-		} else if adh.Porcentaje >= 90 {
-			estado = "excelente"
-		}
-
 		pacienteRes = append(pacienteRes, models.PacienteResumen{
 			ID: p.ID, Nombre: p.Nombre, CitasProximas: proximas,
-			MedicamentosActivos: activos, Adherencia: adh.Porcentaje, Estado: estado,
+			MedicamentosActivos: 0, Adherencia: 0, Estado: "estable",
 		})
-
-		sumaAdherencia += adh.Porcentaje
-	}
-
-	promedioAdherencia := 0.0
-	if len(s.Pacientes) > 0 {
-		promedioAdherencia = math.Round(sumaAdherencia/float64(len(s.Pacientes))*100) / 100
 	}
 
 	return models.DashboardData{
 		ResumenGeneral: models.ResumenGeneral{
-			TotalPacientes:         len(s.Pacientes),
-			TotalCitasHoy:          citasHoy,
-			TotalMedicamentosActivos: totalMedsActivos,
-			TotalAlertasPendientes: alertasTotales,
-			PromedioAdherencia:     promedioAdherencia,
-			PacientesConAlertas:    pacientesConAlertas,
+			TotalPacientes:           len(s.Pacientes),
+			TotalCitasHoy:            citasHoy,
+			TotalMedicamentosActivos: 0,
+			TotalAlertasPendientes:   0,
+			PromedioAdherencia:       0,
+			PacientesConAlertas:      0,
 		},
 		Pacientes: pacienteRes,
 	}
