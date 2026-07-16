@@ -15,7 +15,7 @@ estimación de las calorías quemadas durante la actividad.
 
 Este servicio corre internamente en el puerto **8080** (dentro del contenedor).
 
-Puerto expuesto al host: **8088**
+Puerto expuesto al host: **8090**
 
 ## Endpoints
 

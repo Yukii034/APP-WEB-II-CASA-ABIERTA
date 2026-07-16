@@ -7,16 +7,19 @@ Sistema de microservicios enfocado en el cuidado y bienestar de adultos mayores,
 CuidaBien está compuesto por múltiples microservicios independientes (recordatorio de medicamentos, contacto de emergencia, monitoreo de signos vitales, entre otros) que se comunican entre sí a través de peticiones REST, coordinados por un API Gateway central.
 
 ## Arquitectura
+
+```
 Frontend / Dashboard
-│
-▼
-┌─────────┐
-│ Gateway │  ← punto de entrada único
-└────┬────┘
-│
-┌────┼────┬──────────┬───────────┐
-▼    ▼    ▼           ▼
+        │
+        ▼
+   ┌─────────┐
+   │ Gateway │  ← punto de entrada único
+   └────┬────┘
+        │
+   ┌────┼────┬──────────┬───────────┐
+   ▼    ▼    ▼           ▼
 Medicamentos Emergencia Monitoreo  ... (otros servicios)
+```
 
 - Cada microservicio vive en su propia carpeta dentro de `services/`, con su propio `go.mod` y `Dockerfile`.
 - Los servicios se comunican entre sí usando su **nombre** definido en `docker-compose.yml` (Docker resuelve esto automáticamente, no se usa `localhost` entre contenedores).
@@ -39,13 +42,16 @@ Esto levanta todos los servicios definidos en `docker-compose.yml`. El gateway q
 ## Cómo agregar un nuevo microservicio
 
 1. **Copiar la plantilla base:**
-```bash
+   ```bash
    cp -r services/_template services/nombre-de-tu-servicio
-```
+   ```
 
 2. **Renombrar el módulo** en `services/nombre-de-tu-servicio/go.mod`:
-module cuidabien/nombre-de-tu-servicio
-go 1.22
+   ```
+   module cuidabien/nombre-de-tu-servicio
+
+   go 1.22
+   ```
 
 3. **Reemplazar la lógica de ejemplo** en `main.go` (el struct `Item` y el handler `itemsHandler`) por la lógica real de tu servicio. **No elimines el endpoint `/health`**, es usado para verificar que el servicio esté vivo.
 
@@ -86,11 +92,9 @@ go 1.22
 | monitoreo     | 8083        | pendiente |
 | alimentacion   | 8084        | ✅ activo |
 | citas médicas | 8085        | ✅ activo |
-| contacto emergencia | 8097  | ✅ activo |
 | reportes médicos | 8086        | ✅ activo |
 | estado animo     | 8087 | ✅ activo |
 | Recordatorio de medicamentos     | 8088 | pendiente  |
-| ...           | 809X        | agregar aquí al sumar un servicio |
 
 > Antes de asignarte un puerto, revisa esta tabla y actualízala en tu PR para evitar choques con otro equipo.
 
@@ -101,9 +105,11 @@ go 1.22
 - `feature/nombre-del-servicio`: una rama por servicio/equipo, ej. `feature/emergencia`.
 
 **Commits:** mensajes cortos y descriptivos en español, ej:
+```
 feat: agrega endpoint de recordatorio de medicamentos
 fix: corrige puerto expuesto en docker-compose
 docs: actualiza README de emergencia
+```
 
 **Pull Requests:**
 - Deben pasar el pipeline de CI (`go build`, `go vet`, `go test`) antes de poder mergearse.
@@ -111,6 +117,8 @@ docs: actualiza README de emergencia
 - Describir brevemente qué se agregó y cómo probarlo.
 
 ## Estructura del repositorio
+
+```
 cuidabien/
 ├── .github/workflows/ci.yml    ← pipeline de CI (build, vet, test)
 ├── services/
@@ -122,7 +130,8 @@ cuidabien/
 ├── .env.example
 ├── .gitignore
 └── docs/
-└── arquitectura.md
+    └── arquitectura.md
+```
 
 ## Equipo
 
@@ -130,10 +139,10 @@ cuidabien/
 |----------|----------------|
 | Gateway / base del repo | [Pierina Peñaherrera] |
 | Informacion de salud | [Nahim Simba, Jostin Alvarado, Daivelyn Pincay, Joseph Paredes, Cristina Cedeño] |
-| Contacto de emergencia | [Luis Litardo, Steven Soledispa, Ronnie Mera] |
+| Emergencia | [nombre] |
 | Alimentos | [Eduardo Lopez, Pierina Peñaherrera, José Manuel Castillo, Néstor Gallegos] |
 | Reportes médicos | [Anthony Mendoza - Deimuz, Holguin Nathaly Jasmin, Cedeño Geovanny Alexander] |
 | Citas médicas | [Anthony Mendoza - Deimuz, Holguin Nathaly Jasmin, Cedeño Geovanny Alexander] |
 | Estado animo |  [Danny Zambrano, Michael Cedeño] |
 | Recordatorio de medicamentos | Manuel Intriago, Madelyn Zambrano, Michelle Salazar |
-| ... | ... |
+

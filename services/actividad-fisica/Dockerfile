@@ -9,7 +9,7 @@ RUN go mod download
 COPY . .
 RUN go build -o servicio .
 
-# Etapa final (imagen liviana, sin herramientas de compilación)
+# Etapa final: imagen liviana
 FROM alpine:latest
 
 WORKDIR /app
