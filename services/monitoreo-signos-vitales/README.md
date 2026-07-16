@@ -4,7 +4,7 @@ API estática del proyecto CuidaBien para registrar y consultar mediciones de ad
 
 ## Puerto
 
-Se inicia en el puerto **8083**. Puede cambiarse con la variable de entorno `PORT`.
+Se inicia internamente en el puerto **8080**. Docker Compose lo publica como **8083** en el host para evitar conflictos con los demás servicios. Puede cambiarse con la variable de entorno `PORT`.
 
 ## Endpoints
 
