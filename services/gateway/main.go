@@ -10,14 +10,9 @@ import (
 
 func main() {
 	http.HandleFunc("/health", healthHandler)
-	http.HandleFunc("/api/reportes-medicos/", reportesHandler)
-	http.HandleFunc("/api/cita-medica", citasHandler)
-	http.HandleFunc("/api/cita-medica/", citasHandler)
-	http.HandleFunc("/api/informacion-salud", informacionSaludHandler)
-	http.HandleFunc("/api/informacion-salud/", informacionSaludHandler)
-	http.HandleFunc("/api/recordatorios-medicamentos", recordatoriosMedicamentosHandler)
-	http.HandleFunc("/api/recordatorios-medicamentos/", recordatoriosMedicamentosHandler)
 	http.HandleFunc("/api/medicamentos", proxyHandler("MEDICAMENTOS_URL"))
+	http.HandleFunc("/api/vitales", proxyHandler("MONITOREO_SIGNOS_VITALES_URL"))
+	http.HandleFunc("/api/vitales/", proxyHandler("MONITOREO_SIGNOS_VITALES_URL"))
 	http.HandleFunc("/api/appointments", proxyHandler("CITAS_URL"))
 	http.HandleFunc("/api/appointments/", proxyHandler("CITAS_URL"))
 	http.HandleFunc("/api/patients", proxyHandler("CITAS_URL"))
@@ -34,6 +29,8 @@ func main() {
 	http.HandleFunc("/api/informacion-salud/", proxyHandler("INFORMACION_SALUD_URL"))
 	http.HandleFunc("/api/contacto-emergencia", proxyHandler("CONTACTO_EMERGENCIA_URL"))
 	http.HandleFunc("/api/contacto-emergencia/", proxyHandler("CONTACTO_EMERGENCIA_URL"))
+	http.HandleFunc("/api/ejercicios", proxyHandler("ESTIMULACION_COGNITIVA_URL"))
+	http.HandleFunc("/api/ejercicios/", proxyHandler("ESTIMULACION_COGNITIVA_URL"))
 
 	port := os.Getenv("PORT")
 	if port == "" {

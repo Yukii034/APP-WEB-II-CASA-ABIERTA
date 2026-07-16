@@ -60,11 +60,11 @@ Esto levanta todos los servicios definidos en `docker-compose.yml`. El gateway q
    nombre-de-tu-servicio:
      build: ./services/nombre-de-tu-servicio
      environment:
-       - PORT=8080
+       - PORT=8083
      networks:
        - cuidabien-net
      ports:
-       - "808X:8080"   # asignar un puerto libre, ver tabla abajo
+       - "8083:8080"   # asignar un puerto libre, ver tabla abajo
 ```
 
 5. **Agregar tu servicio a la matrix del CI**, en `.github/workflows/ci.yml`:
@@ -88,7 +88,7 @@ Esto levanta todos los servicios definidos en `docker-compose.yml`. El gateway q
 |---------------|-------------|--------|
 | gateway       | 8080        | ✅ activo |
 | informacion salud    | 8082        | ✅ activo |
-| monitoreo     | 8083        | ✅ activo |
+| monitoreo de signos vitales | 8083 | ✅ activo |
 | alimentacion   | 8084        | ✅ activo |
 | citas médicas | 8085        | ✅ activo |
 | reportes médicos | 8086        | ✅ activo |
@@ -97,6 +97,8 @@ Esto levanta todos los servicios definidos en `docker-compose.yml`. El gateway q
 | Recordatorio de medicamentos | 8089 | ✅ activo |
 | actividad física | 8090 | ✅ activo |
 | contacto emergencia | 8097 | ✅ activo |
+| cuidadores | 8099 | 🚧 en desarrollo |
+| estimulacion cognitiva | 8095 | ✅ activo |
 
 > Antes de asignarte un puerto, revisa esta tabla y actualízala en tu PR para evitar choques con otro equipo.
 
@@ -141,10 +143,12 @@ cuidabien/
 |----------|----------------|
 | Gateway / base del repo | [Pierina Peñaherrera] |
 | Informacion de salud | [Nahim Simba, Jostin Alvarado, Daivelyn Pincay, Joseph Paredes, Cristina Cedeño] |
-| Emergencia | [nombre] |
+| Contacto de emergencia | [Luis Litardo, Steven Soledispa, Ronnie Mera] |
 | Alimentos | [Eduardo Lopez, Pierina Peñaherrera, José Manuel Castillo, Néstor Gallegos] |
 | Reportes médicos | [Anthony Mendoza - Deimuz, Holguin Nathaly Jasmin, Cedeño Geovanny Alexander] |
 | Citas médicas | [Anthony Mendoza - Deimuz, Holguin Nathaly Jasmin, Cedeño Geovanny Alexander] |
 | Estado animo |  [Danny Zambrano, Michael Cedeño] |
 | Recordatorio de medicamentos | [Manuel Intriago, Madelyn Zambrano, Michelle Salazar] |
-
+| Cuidadores | Jeremy (S3N-SHI) |
+| Estimulación cognitiva | Bryan López  -  Isaac Sornoza  -  Eduardo Flores |
+| Monitoreo de signos vitales | [Anthony Macias, Winter Povea, Montecé Frank, Hector Fernandez] |
