@@ -143,7 +143,7 @@ cuidabien/
 |----------|----------------|
 | Gateway / base del repo | [Pierina Peñaherrera] |
 | Informacion de salud | [Nahim Simba, Jostin Alvarado, Daivelyn Pincay, Joseph Paredes, Cristina Cedeño] |
-| Emergencia | [nombre] |
+| Contacto de emergencia | [Luis Litardo, Steven Soledispa, Ronnie Mera] |
 | Alimentos | [Eduardo Lopez, Pierina Peñaherrera, José Manuel Castillo, Néstor Gallegos] |
 | Reportes médicos | [Anthony Mendoza - Deimuz, Holguin Nathaly Jasmin, Cedeño Geovanny Alexander] |
 | Citas médicas | [Anthony Mendoza - Deimuz, Holguin Nathaly Jasmin, Cedeño Geovanny Alexander] |
