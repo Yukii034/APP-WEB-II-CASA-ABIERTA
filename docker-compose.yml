@@ -1,17 +1,6 @@
 services:
 
   # Ejemplo de microservicio (cada equipo agrega el suyo copiando este bloque)
-  medicamentos:
-    build: ./services/medicamentos
-    environment:
-      - PORT=8080
-    networks:
-      - cuidabien-net
-    # No necesita "ports" hacia afuera si solo lo usa el gateway,
-    # pero lo dejamos expuesto para poder probarlo directo mientras desarrollan
-    ports:
-      - "8081:8080"
-
   informacion-salud:
     build: ./services/informacion-salud
     environment:
@@ -78,7 +67,6 @@ services:
     build: ./services/gateway
     environment:
       - PORT=8080
-      - MEDICAMENTOS_URL=http://medicamentos:8080
       - CITAS_URL=http://citas:8080
       - ESTADO_ANIMO_URL=http://estado-animo:8080
       - REPORTES_URL=http://reportes-medicos:8080
@@ -88,7 +76,6 @@ services:
       # - EMERGENCIA_URL=http://emergencia:8080
       # - MONITOREO_URL=http://monitoreo:8080
     depends_on:
-      - medicamentos
       - informacion-salud
       - citas
       - estado-animo

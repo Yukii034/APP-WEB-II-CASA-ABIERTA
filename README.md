@@ -87,14 +87,13 @@ Esto levanta todos los servicios definidos en `docker-compose.yml`. El gateway q
 | Servicio      | Puerto host | Estado |
 |---------------|-------------|--------|
 | gateway       | 8080        | ✅ activo |
-| medicamentos  | 8081        | ✅ activo |
 | informacion salud    | 8082        | ✅ activo |
 | monitoreo     | 8083        | pendiente |
 | alimentacion   | 8084        | ✅ activo |
 | citas médicas | 8085        | ✅ activo |
 | reportes médicos | 8086        | ✅ activo |
 | estado animo     | 8087 | ✅ activo |
-| Recordatorio de medicamentos     | 8088 | pendiente  |
+| Recordatorio de medicamentos     | 8089 | ✅ activo  |
 
 > Antes de asignarte un puerto, revisa esta tabla y actualízala en tu PR para evitar choques con otro equipo.
 
@@ -144,5 +143,5 @@ cuidabien/
 | Reportes médicos | [Anthony Mendoza - Deimuz, Holguin Nathaly Jasmin, Cedeño Geovanny Alexander] |
 | Citas médicas | [Anthony Mendoza - Deimuz, Holguin Nathaly Jasmin, Cedeño Geovanny Alexander] |
 | Estado animo |  [Danny Zambrano, Michael Cedeño] |
-| Recordatorio de medicamentos | Manuel Intriago, Madelyn Zambrano, Michelle Salazar |
+| Recordatorio de medicamentos | [Manuel Intriago, Madelyn Zambrano, Michelle Salazar] |
 
