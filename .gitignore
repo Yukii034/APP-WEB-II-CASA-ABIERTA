@@ -37,5 +37,8 @@ desktop.ini
 # Docker
 docker-compose.override.yml
 
+# Repositorio anidado
+APP-WEB-II-CASA-ABIERTA/
+
 # Logs
 *.log
