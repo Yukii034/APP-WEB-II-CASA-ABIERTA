@@ -97,7 +97,7 @@ Esto levanta todos los servicios definidos en `docker-compose.yml`. El gateway q
 | Recordatorio de medicamentos | 8089 | ✅ activo |
 | actividad física | 8090 | ✅ activo |
 | contacto emergencia | 8097 | ✅ activo |
-| cuidadores | 8099 | 🚧 en desarrollo |
+| cuidadores | 8099 | ✅ activo |
 
 > Antes de asignarte un puerto, revisa esta tabla y actualízala en tu PR para evitar choques con otro equipo.
 
