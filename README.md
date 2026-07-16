@@ -94,7 +94,7 @@ Esto levanta todos los servicios definidos en `docker-compose.yml`. El gateway q
 | reportes médicos | 8086        | ✅ activo |
 | estado animo     | 8087 | ✅ activo |
 | reportes (equipo) | 8088 | ✅ activo |
-| Recordatorio de medicamentos | 8089 | pendiente |
+| Recordatorio de medicamentos | 8089 | ✅ activo |
 | actividad física | 8090 | ✅ activo |
 | contacto emergencia | 8097 | ✅ activo |
 
