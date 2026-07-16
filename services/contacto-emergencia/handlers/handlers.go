@@ -39,7 +39,7 @@ func (h *Handlers) HealthHandler(w http.ResponseWriter, r *http.Request) {
 	writeJSON(w, http.StatusOK, map[string]string{"status": "ok"})
 }
 
-// --- Contactos ---
+// --- Contactos.. ---
 
 // GET /api/contacts (soporta ?paciente_id= para filtrar)
 func (h *Handlers) ListarContactosHandler(w http.ResponseWriter, r *http.Request) {
