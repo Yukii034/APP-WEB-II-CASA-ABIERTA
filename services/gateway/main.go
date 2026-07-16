@@ -16,6 +16,8 @@ func main() {
 	http.HandleFunc("/api/cita-medica/", citasHandler)
 	http.HandleFunc("/api/informacion-salud", informacionSaludHandler)
 	http.HandleFunc("/api/informacion-salud/", informacionSaludHandler)
+	http.HandleFunc("/api/recordatorios-medicamentos", recordatoriosMedicamentosHandler)
+	http.HandleFunc("/api/recordatorios-medicamentos/", recordatoriosMedicamentosHandler)
 
 	port := os.Getenv("PORT")
 	if port == "" {
@@ -174,6 +176,47 @@ func informacionSaludHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(resp.StatusCode)
+	w.Write(body)
+}
+
+// Proxy al microservicio de recordatorio de medicamentos.
+// Reenvía método, body, path y query sin agregar lógica propia.
+func recordatoriosMedicamentosHandler(w http.ResponseWriter, r *http.Request) {
+	recordatorioURL := os.Getenv("RECORDATORIOS_MEDICAMENTOS_URL")
+	if recordatorioURL == "" {
+		http.Error(w, "RECORDATORIOS_MEDICAMENTOS_URL no configurada", http.StatusInternalServerError)
+		return
+	}
+
+	destino := recordatorioURL + r.URL.Path
+	if r.URL.RawQuery != "" {
+		destino += "?" + r.URL.RawQuery
+	}
+
+	req, err := http.NewRequest(r.Method, destino, r.Body)
+
+	if err != nil {
+		http.Error(w, "Error al crear la petición", http.StatusInternalServerError)
+		return
+	}
+	req.Header.Set("Content-Type", r.Header.Get("Content-Type"))
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		http.Error(w, "Error al contactar el servicio "+"de recordatorio de medicamentos", http.StatusBadGateway)
+		return
+	}
+	defer resp.Body.Close()
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		http.Error(w, "Error al leer la respuesta", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", resp.Header.Get("Content-Type"))
 	w.WriteHeader(resp.StatusCode)
 	w.Write(body)
 }

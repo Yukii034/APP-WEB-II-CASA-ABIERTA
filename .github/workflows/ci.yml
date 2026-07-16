@@ -20,6 +20,7 @@ jobs:
           - estado-animo
           - citas
           - reportes-medicos
+          - recordatorios-medicamentos
           # agregar aquí cada nuevo microservicio SOLO cuando ya exista
           # su carpeta en services/, si no, el CI falla
 
