@@ -84,23 +84,23 @@ Esto levanta todos los servicios definidos en `docker-compose.yml`. El gateway q
 
 ## Convención de puertos
 
-| Servicio      | Puerto host | Estado |
-|---------------|-------------|--------|
-| gateway       | 8080        | ✅ activo |
-| medicamentos  | 8081        | ✅ activo |
-| informacion salud    | 8082        | ✅ activo |
-| monitoreo     | 8083        | pendiente |
-| alimentacion   | 8084        | ✅ activo |
-| citas médicas | 8085        | ✅ activo |
-| reportes médicos | 8086        | ✅ activo |
-| estado animo     | 8087 | ✅ activo |
-<<<<<<< HEAD
-| Recordatorio de medicamentos     | 8088 | pendiente  |
-=======
+## Convención de puertos
+
+| Servicio | Puerto host | Estado |
+|----------|-------------|--------|
+| gateway | 8080 | ✅ activo |
+| medicamentos | 8081 | ✅ activo |
+| informacion salud | 8082 | ✅ activo |
+| monitoreo | 8083 | pendiente |
+| alimentacion | 8084 | ✅ activo |
+| citas médicas | 8085 | ✅ activo |
+| reportes médicos | 8086 | ✅ activo |
+| estado animo | 8087 | ✅ activo |
 | reportes (equipo) | 8088 | ✅ activo |
 | Recordatorio de medicamentos | 8089 | pendiente |
+| actividad física | 8090 | ✅ activo |
 | contacto emergencia | 8097 | ✅ activo |
->>>>>>> origin/main
+
 
 > Antes de asignarte un puerto, revisa esta tabla y actualízala en tu PR para evitar choques con otro equipo.
 
@@ -140,6 +140,7 @@ cuidabien/
 ```
 
 ## Equipo
+## Equipo
 
 | Servicio | Responsable(s) |
 |----------|----------------|
@@ -149,10 +150,7 @@ cuidabien/
 | Alimentos | [Eduardo Lopez, Pierina Peñaherrera, José Manuel Castillo, Néstor Gallegos] |
 | Reportes médicos | [Anthony Mendoza - Deimuz, Holguin Nathaly Jasmin - NathalyLucas11, Cedeño Geovanny Alexander - alex167j] |
 | Citas médicas | [Anthony Mendoza - Deimuz, Holguin Nathaly Jasmin - NathalyLucas11, Cedeño Geovanny Alexander - alex167j] |
-| Estado animo |  [Danny Zambrano, Michael Cedeño] |
+| Estado animo | [Danny Zambrano, Michael Cedeño] |
 | Recordatorio de medicamentos | Manuel Intriago, Madelyn Zambrano, Michelle Salazar |
-<<<<<<< HEAD
-
-=======
-| ... | ... |
->>>>>>> origin/main
+| Actividad física | Melanie Anchundia, Libesth Aray |
+| Contacto emergencia | [nombre del equipo] |
