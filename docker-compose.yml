@@ -1,14 +1,16 @@
 services:
 
-  medicamentos:
-    build: ./services/medicamentos
+  # Ejemplo de microservicio (cada equipo agrega el suyo copiando este bloque)
+  informacion-salud:
+    build: ./services/informacion-salud
     environment:
-      - PORT=8080
+      - PORT=8082
     networks:
       - cuidabien-net
     ports:
-      - "8081:8080"
+      - "8082:8080"
 
+  
   alimentacion:
     build: ./services/alimentacion
     environment:
@@ -20,15 +22,6 @@ services:
       - cuidabien-net
     ports:
       - "8084:8080"
-
-  informacion-salud:
-    build: ./services/informacion-salud
-    environment:
-      - PORT=8082
-    networks:
-      - cuidabien-net
-    ports:
-      - "8082:8080"
 
   citas:
     build: ./services/citas
@@ -76,6 +69,16 @@ services:
       - cuidabien-net
     ports:
       - "8086:8080"
+  
+  recordatorios-medicamentos:
+    build: ./services/recordatorios-medicamentos
+    environment:
+      - PORT=8080
+      - TIMEZONE=America/Guayaquil
+    ports:
+      - "8089:8080"
+    networks:
+      - cuidabien-net
 
   actividad-fisica:
     build: ./services/actividad-fisica
@@ -90,11 +93,11 @@ services:
     build: ./services/gateway
     environment:
       - PORT=8080
-      - MEDICAMENTOS_URL=http://medicamentos:8080
       - CITAS_URL=http://citas:8080
       - REPORTES_URL=http://reportes:8080
       - ALIMENTACION_URL=http://alimentacion:8080
       - INFORMACION_SALUD_URL=http://informacion-salud:8082
+      - RECORDATORIOS_MEDICAMENTOS_URL=http://recordatorios-medicamentos:8080
       - ESTADO_ANIMO_URL=http://estado-animo:8080
       - REPORTES_MEDICOS_URL=http://reportes-medicos:8080
       - CONTACTO_EMERGENCIA_URL=http://contacto-emergencia:8080
@@ -103,13 +106,13 @@ services:
       # - EMERGENCIA_URL=http://emergencia:8080
       # - MONITOREO_URL=http://monitoreo:8080
     depends_on:
-      - medicamentos
       - informacion-salud
       - citas
       - reportes
       - alimentacion
       - estado-animo
       - reportes-medicos
+      - recordatorios-medicamentos
       - contacto-emergencia
       - actividad-fisica
     networks:

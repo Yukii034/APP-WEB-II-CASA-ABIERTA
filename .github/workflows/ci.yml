@@ -13,7 +13,6 @@ jobs:
     strategy:
       matrix:
         service:
-          - medicamentos
           - gateway
           - alimentacion
           - informacion-salud
@@ -22,6 +21,7 @@ jobs:
           - reportes
           - contacto-emergencia
           - reportes-medicos
+          - recordatorios-medicamentos
           - actividad-fisica
           # agregar aquí cada nuevo microservicio SOLO cuando ya exista
           # su carpeta en services/, si no, el CI falla
