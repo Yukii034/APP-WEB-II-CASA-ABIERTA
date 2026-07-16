@@ -1,15 +1,5 @@
 services:
 
-  recordatorios-medicamentos:
-    build: ./services/recordatorios-medicamentos
-    environment:
-      - PORT=8080
-      - TIMEZONE=America/Guayaquil
-    ports:
-      - "8089:8080"
-    networks:
-      - cuidabien-net
-
   # Ejemplo de microservicio (cada equipo agrega el suyo copiando este bloque)
   medicamentos:
     build: ./services/medicamentos
@@ -22,6 +12,16 @@ services:
     ports:
       - "8081:8080"
 
+  informacion-salud:
+    build: ./services/informacion-salud
+    environment:
+      - PORT=8082
+    networks:
+      - cuidabien-net
+    ports:
+      - "8082:8080"
+
+  
   alimentacion:
     build: ./services/alimentacion
     environment:
@@ -32,15 +32,6 @@ services:
     # pero lo dejamos expuesto para poder probarlo directo mientras desarrollan
     ports:
       - "8084:8080"
-
-  informacion-salud:
-    build: ./services/informacion-salud
-    environment:
-      - PORT=8082
-    networks:
-      - cuidabien-net
-    ports:
-      - "8082:8080"
 
   citas:
     build: ./services/citas
@@ -72,6 +63,16 @@ services:
       - cuidabien-net
     ports:
       - "8086:8080"
+  
+  recordatorios-medicamentos:
+    build: ./services/recordatorios-medicamentos
+    environment:
+      - PORT=8080
+      - TIMEZONE=America/Guayaquil
+    ports:
+      - "8089:8080"
+    networks:
+      - cuidabien-net
 
   gateway:
     build: ./services/gateway
@@ -92,6 +93,7 @@ services:
       - citas
       - estado-animo
       - reportes-medicos
+      - recordatorios-medicamentos
     networks:
       - cuidabien-net
     ports:
