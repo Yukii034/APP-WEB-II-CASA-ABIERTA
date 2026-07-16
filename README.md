@@ -60,11 +60,11 @@ Esto levanta todos los servicios definidos en `docker-compose.yml`. El gateway q
    nombre-de-tu-servicio:
      build: ./services/nombre-de-tu-servicio
      environment:
-       - PORT=8080
+       - PORT=8083
      networks:
        - cuidabien-net
      ports:
-       - "808X:8080"   # asignar un puerto libre, ver tabla abajo
+       - "8083:8080"   # asignar un puerto libre, ver tabla abajo
 ```
 
 5. **Agregar tu servicio a la matrix del CI**, en `.github/workflows/ci.yml`:
@@ -88,7 +88,7 @@ Esto levanta todos los servicios definidos en `docker-compose.yml`. El gateway q
 |---------------|-------------|--------|
 | gateway       | 8080        | ✅ activo |
 | informacion salud    | 8082        | ✅ activo |
-| monitoreo     | 8083        | ✅ activo |
+| monitoreo de signos vitales | 8083 | ✅ activo |
 | alimentacion   | 8084        | ✅ activo |
 | citas médicas | 8085        | ✅ activo |
 | reportes médicos | 8086        | ✅ activo |
@@ -147,4 +147,4 @@ cuidabien/
 | Citas médicas | [Anthony Mendoza - Deimuz, Holguin Nathaly Jasmin, Cedeño Geovanny Alexander] |
 | Estado animo |  [Danny Zambrano, Michael Cedeño] |
 | Recordatorio de medicamentos | [Manuel Intriago, Madelyn Zambrano, Michelle Salazar] |
-
+| Monitoreo de signos vitales | [Anthony Macias, Winter Povea, Montecé Frank, Hector Fernandez] |

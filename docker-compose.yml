@@ -1,6 +1,15 @@
 services:
 
   # Ejemplo de microservicio (cada equipo agrega el suyo copiando este bloque)
+  medicamentos:
+    build: ./services/medicamentos
+    environment:
+      - PORT=8080
+    networks:
+      - cuidabien-net
+    ports:
+      - "8081:8080"
+
   informacion-salud:
     build: ./services/informacion-salud
     environment:
@@ -89,11 +98,35 @@ services:
     ports:
       - "8090:8080"
 
+  contacto-emergencia:
+    build: ./services/contacto-emergencia
+    environment:
+      - PORT=8080
+    networks:
+      - cuidabien-net
+    ports:
+      - "8097:8080"
+
+  monitoreo-signos-vitales:
+    build:
+      context: ./services/monitoreo-signos-vitales
+      dockerfile: Dockerfile
+    environment:
+      - PORT=8080
+    init: true
+    restart: unless-stopped
+    networks:
+      - cuidabien-net
+    ports:
+      - "8083:8080"
+
   gateway:
     build: ./services/gateway
     environment:
       - PORT=8080
+      - MEDICAMENTOS_URL=http://medicamentos:8080
       - CITAS_URL=http://citas:8080
+      - MONITOREO_SIGNOS_VITALES_URL=http://monitoreo-signos-vitales:8080
       - REPORTES_URL=http://reportes:8080
       - ALIMENTACION_URL=http://alimentacion:8080
       - INFORMACION_SALUD_URL=http://informacion-salud:8082
@@ -106,8 +139,10 @@ services:
       # - EMERGENCIA_URL=http://emergencia:8080
       # - MONITOREO_URL=http://monitoreo:8080
     depends_on:
+      - medicamentos
       - informacion-salud
       - citas
+      - monitoreo-signos-vitales
       - reportes
       - alimentacion
       - estado-animo
