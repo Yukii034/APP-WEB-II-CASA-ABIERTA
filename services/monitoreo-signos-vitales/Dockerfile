@@ -24,11 +24,11 @@ COPY --from=builder /out/monitoreo-signos-vitales ./monitoreo-signos-vitales
 
 USER app
 
-ENV PORT=8083
+ENV PORT=8080
 
-EXPOSE 8083
+EXPOSE 8080
 
 HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 \
-    CMD wget --spider --quiet http://127.0.0.1:8083/health || exit 1
+    CMD wget --spider --quiet http://127.0.0.1:8080/health || exit 1
 
 ENTRYPOINT ["/app/monitoreo-signos-vitales"]
