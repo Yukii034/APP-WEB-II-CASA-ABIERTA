@@ -32,18 +32,33 @@ services:
     ports:
       - "8085:8080"
 
+  monitoreo-signos-vitales:
+    build:
+      context: ./services/monitoreo-signos-vitales
+      dockerfile: Dockerfile
+    environment:
+      - PORT=8080
+    init: true
+    restart: unless-stopped
+    networks:
+      - cuidabien-net
+    ports:
+      - "8083:8080"
+
   gateway:
     build: ./services/gateway
     environment:
       - PORT=8080
       - MEDICAMENTOS_URL=http://medicamentos:8080
       - CITAS_URL=http://citas:8080
+      - MONITOREO_SIGNOS_VITALES_URL=http://monitoreo-signos-vitales:8080
       # Aquí se van agregando las URLs de los demás servicios:
       # - EMERGENCIA_URL=http://emergencia:8080
       # - MONITOREO_URL=http://monitoreo:8080
     depends_on:
       - medicamentos
       - citas
+      - monitoreo-signos-vitales
     networks:
       - cuidabien-net
     ports:
