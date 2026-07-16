@@ -1,0 +1,24 @@
+//line C:\Users\ASUS\Desktop\SEXTO SEMESTRE\APLICACIONES WEB II\APP-WEB-II-CASA-ABIERTA\services\informacion-salud\internal\model\informacion_salud.go:1:1
+package model
+
+import "time"
+
+// InformacionSalud representa la ficha de salud de un adulto mayor.
+type InformacionSalud struct {
+	ID                   string    `json:"id"`
+	NombrePaciente       string    `json:"nombre_paciente,omitempty"`
+	Diagnosticos         []string  `json:"diagnosticos"`
+	Alergias             []string  `json:"alergias"`
+	EnfermedadesCronicas []string  `json:"enfermedades_cronicas"`
+	AntecedentesMedicos  []string  `json:"antecedentes_medicos"`
+	ActualizadoEn        time.Time `json:"actualizado_en"`
+}
+
+// EntradaInformacionSalud es el body esperado en POST y PUT.
+type EntradaInformacionSalud struct {
+	NombrePaciente       string   `json:"nombre_paciente"`
+	Diagnosticos         []string `json:"diagnosticos"`
+	Alergias             []string `json:"alergias"`
+	EnfermedadesCronicas []string `json:"enfermedades_cronicas"`
+	AntecedentesMedicos  []string `json:"antecedentes_medicos"`
+}

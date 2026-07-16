@@ -17,6 +17,7 @@ type InformacionSaludHandler struct {
 	service *service.InformacionSaludService
 }
 
+// NuevoInformacionSaludHandler construye el adaptador HTTP del servicio.
 func NuevoInformacionSaludHandler(s *service.InformacionSaludService) *InformacionSaludHandler {
 	return &InformacionSaludHandler{service: s}
 }

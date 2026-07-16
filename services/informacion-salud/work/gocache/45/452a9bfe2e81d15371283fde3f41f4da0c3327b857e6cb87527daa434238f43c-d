@@ -1,0 +1,96 @@
+//line C:\Users\ASUS\Desktop\SEXTO SEMESTRE\APLICACIONES WEB II\APP-WEB-II-CASA-ABIERTA\services\informacion-salud\internal\service\informacion_salud.go:1:1
+package service
+
+import (
+	"time"
+
+	"cuidabien/informacion-salud/internal/model"
+	"cuidabien/informacion-salud/internal/repository"
+)
+
+// InformacionSaludService contiene la lógica de negocio del servicio.
+// No sabe si los datos están en memoria o en una base de datos: solo
+// conoce la interfaz repository.Repository.
+type InformacionSaludService struct {
+	repo repository.Repository
+}
+
+func NuevoInformacionSaludService(repo repository.Repository) *InformacionSaludService {goCover_1cc40eda825e__0[0] = 1 ; goCover_1cc40eda825e__0[1] = goCover_1cc40eda825e_P ; goCover_1cc40eda825e__0[2] = 0 ; goCover_1cc40eda825e__0[3] = 1;
+	return &InformacionSaludService{repo: repo}
+}
+
+// Listar devuelve todas las fichas registradas.
+func (s *InformacionSaludService) Listar() []model.InformacionSalud {goCover_1cc40eda825e__1[0] = 1 ; goCover_1cc40eda825e__1[1] = goCover_1cc40eda825e_P ; goCover_1cc40eda825e__1[2] = 1 ; goCover_1cc40eda825e__1[3] = 1;
+	return s.repo.Listar()
+}
+
+// Crear registra una nueva ficha de salud.
+func (s *InformacionSaludService) Crear(entrada model.EntradaInformacionSalud) model.InformacionSalud {goCover_1cc40eda825e__2[0] = 1 ; goCover_1cc40eda825e__2[1] = goCover_1cc40eda825e_P ; goCover_1cc40eda825e__2[2] = 2 ; goCover_1cc40eda825e__2[3] = 1;
+	nuevo := nuevoRegistro(s.repo.SiguienteID(), entrada, time.Now())
+	s.repo.Guardar(nuevo)
+	return nuevo
+}
+
+// Obtener busca la ficha de un paciente por id.
+func (s *InformacionSaludService) Obtener(id string) (model.InformacionSalud, bool) {goCover_1cc40eda825e__3[0] = 1 ; goCover_1cc40eda825e__3[1] = goCover_1cc40eda825e_P ; goCover_1cc40eda825e__3[2] = 3 ; goCover_1cc40eda825e__3[3] = 1;
+	return s.repo.Obtener(id)
+}
+
+// Actualizar aplica una actualización parcial sobre la ficha de un
+// paciente existente. Devuelve ok=false si el id no existe.
+func (s *InformacionSaludService) Actualizar(id string, entrada model.EntradaInformacionSalud) (model.InformacionSalud, bool) {goCover_1cc40eda825e__4[0] = 3 ; goCover_1cc40eda825e__4[1] = goCover_1cc40eda825e_P ; goCover_1cc40eda825e__4[2] = 4 ; goCover_1cc40eda825e__4[3] = 1;
+	existente, ok := s.repo.Obtener(id)
+	if !ok {goCover_1cc40eda825e__4[5] = 1;
+		return model.InformacionSalud{}, false
+	}
+
+	goCover_1cc40eda825e__4[4] = 1;actualizado := actualizarRegistro(existente, entrada, time.Now())
+	s.repo.Guardar(actualizado)
+	return actualizado, true
+}
+
+// nuevoRegistro es una función pura (sin estado) para que sea fácil de
+// probar con go test, sin necesidad de mockear el repository.
+func nuevoRegistro(id string, entrada model.EntradaInformacionSalud, ahora time.Time) model.InformacionSalud {goCover_1cc40eda825e__5[0] = 1 ; goCover_1cc40eda825e__5[1] = goCover_1cc40eda825e_P ; goCover_1cc40eda825e__5[2] = 5 ; goCover_1cc40eda825e__5[3] = 1;
+	return model.InformacionSalud{
+		ID:                   id,
+		NombrePaciente:       entrada.NombrePaciente,
+		Diagnosticos:         normalizar(entrada.Diagnosticos),
+		Alergias:             normalizar(entrada.Alergias),
+		EnfermedadesCronicas: normalizar(entrada.EnfermedadesCronicas),
+		AntecedentesMedicos:  normalizar(entrada.AntecedentesMedicos),
+		ActualizadoEn:        ahora,
+	}
+}
+
+// actualizarRegistro combina la ficha existente con los campos
+// enviados, sin borrar datos que no vinieron en la petición
+// (actualización parcial).
+func actualizarRegistro(existente model.InformacionSalud, entrada model.EntradaInformacionSalud, ahora time.Time) model.InformacionSalud {goCover_1cc40eda825e__6[0] = 11 ; goCover_1cc40eda825e__6[1] = goCover_1cc40eda825e_P ; goCover_1cc40eda825e__6[2] = 6 ; goCover_1cc40eda825e__6[3] = 1;
+	if entrada.NombrePaciente != "" {goCover_1cc40eda825e__6[9] = 1;
+		existente.NombrePaciente = entrada.NombrePaciente
+	}
+	goCover_1cc40eda825e__6[4] = 1;if entrada.Diagnosticos != nil {goCover_1cc40eda825e__6[10] = 1;
+		existente.Diagnosticos = normalizar(entrada.Diagnosticos)
+	}
+	goCover_1cc40eda825e__6[5] = 1;if entrada.Alergias != nil {goCover_1cc40eda825e__6[11] = 1;
+		existente.Alergias = normalizar(entrada.Alergias)
+	}
+	goCover_1cc40eda825e__6[6] = 1;if entrada.EnfermedadesCronicas != nil {goCover_1cc40eda825e__6[12] = 1;
+		existente.EnfermedadesCronicas = normalizar(entrada.EnfermedadesCronicas)
+	}
+	goCover_1cc40eda825e__6[7] = 1;if entrada.AntecedentesMedicos != nil {goCover_1cc40eda825e__6[13] = 1;
+		existente.AntecedentesMedicos = normalizar(entrada.AntecedentesMedicos)
+	}
+	goCover_1cc40eda825e__6[8] = 1;existente.ActualizadoEn = ahora
+	return existente
+}
+
+// normalizar evita que el JSON de salida muestre "null" en vez de una
+// lista vacía cuando no se envía ese campo.
+func normalizar(valores []string) []string {goCover_1cc40eda825e__7[0] = 3 ; goCover_1cc40eda825e__7[1] = goCover_1cc40eda825e_P ; goCover_1cc40eda825e__7[2] = 7 ; goCover_1cc40eda825e__7[3] = 1;
+	if valores == nil {goCover_1cc40eda825e__7[5] = 1;
+		return []string{}
+	}
+	goCover_1cc40eda825e__7[4] = 1;return valores
+}
