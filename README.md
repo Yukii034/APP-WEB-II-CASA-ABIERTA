@@ -149,8 +149,14 @@ cuidabien/
 | Estado animo |  [Danny Zambrano, Michael Cedeño] |
 | Recordatorio de medicamentos | [Manuel Intriago, Madelyn Zambrano, Michelle Salazar] |
 <<<<<<< HEAD
+<<<<<<< HEAD
 | Cuidadores | Jeremy (S3N-SHI) |
 
 =======
 | Monitoreo de signos vitales | [Anthony Macias, Winter Povea, Montecé Frank, Hector Fernandez] |
 >>>>>>> origin/main
+=======
+| Cuidadores | Jeremy (S3N-SHI) |
+
+| Monitoreo de signos vitales | [Anthony Macias, Winter Povea, Montecé Frank, Hector Fernandez] |
+>>>>>>> 004c184a7f81275e46278115735a80c8a178f452
