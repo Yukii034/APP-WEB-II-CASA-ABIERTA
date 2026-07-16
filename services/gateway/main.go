@@ -29,6 +29,8 @@ func main() {
 	http.HandleFunc("/api/informacion-salud/", proxyHandler("INFORMACION_SALUD_URL"))
 	http.HandleFunc("/api/contacto-emergencia", proxyHandler("CONTACTO_EMERGENCIA_URL"))
 	http.HandleFunc("/api/contacto-emergencia/", proxyHandler("CONTACTO_EMERGENCIA_URL"))
+	http.HandleFunc("/api/ejercicios", proxyHandler("ESTIMULACION_COGNITIVA_URL"))
+	http.HandleFunc("/api/ejercicios/", proxyHandler("ESTIMULACION_COGNITIVA_URL"))
 
 	port := os.Getenv("PORT")
 	if port == "" {
