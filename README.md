@@ -88,12 +88,15 @@ Esto levanta todos los servicios definidos en `docker-compose.yml`. El gateway q
 |---------------|-------------|--------|
 | gateway       | 8080        | ✅ activo |
 | informacion salud    | 8082        | ✅ activo |
-| monitoreo     | 8083        | pendiente |
+| monitoreo     | 8083        | ✅ activo |
 | alimentacion   | 8084        | ✅ activo |
 | citas médicas | 8085        | ✅ activo |
 | reportes médicos | 8086        | ✅ activo |
 | estado animo     | 8087 | ✅ activo |
-| Recordatorio de medicamentos     | 8089 | ✅ activo  |
+| reportes (equipo) | 8088 | ✅ activo |
+| Recordatorio de medicamentos | 8089 | pendiente |
+| actividad física | 8090 | ✅ activo |
+| contacto emergencia | 8097 | ✅ activo |
 
 > Antes de asignarte un puerto, revisa esta tabla y actualízala en tu PR para evitar choques con otro equipo.
 
