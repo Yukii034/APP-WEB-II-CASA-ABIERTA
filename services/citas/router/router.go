@@ -96,7 +96,6 @@ func New(h *handlers.Handlers) http.HandlerFunc {
 		}
 
 		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusNotFound)
 		http.Error(w, `{"error":"Ruta no encontrada"}`, http.StatusNotFound)
 	}
 }

@@ -14,21 +14,24 @@ func Sembrar(repo Repository) {
 
 	ejemplos := []model.InformacionSalud{
 		{
-			NombrePaciente:       "María Pérez",
+			ID:                   "P001",
+			NombrePaciente:       "Maria Garcia",
 			Diagnosticos:         []string{"hipertensión arterial"},
 			Alergias:             []string{"penicilina"},
 			EnfermedadesCronicas: []string{"diabetes tipo 2"},
 			AntecedentesMedicos:  []string{"cirugía de cadera (2019)"},
 		},
 		{
-			NombrePaciente:       "José Ramírez",
+			ID:                   "P002",
+			NombrePaciente:       "Juan Lopez",
 			Diagnosticos:         []string{"artritis"},
 			Alergias:             []string{},
 			EnfermedadesCronicas: []string{"hipotiroidismo"},
 			AntecedentesMedicos:  []string{"marcapasos (2021)"},
 		},
 		{
-			NombrePaciente:       "Carmen Torres",
+			ID:                   "P003",
+			NombrePaciente:       "Ana Martinez",
 			Diagnosticos:         []string{},
 			Alergias:             []string{"aspirina", "mariscos"},
 			EnfermedadesCronicas: []string{},
@@ -37,7 +40,6 @@ func Sembrar(repo Repository) {
 	}
 
 	for _, ejemplo := range ejemplos {
-		ejemplo.ID = repo.SiguienteID()
 		ejemplo.ActualizadoEn = ahora
 		repo.Guardar(ejemplo)
 	}

@@ -8,7 +8,6 @@ import (
 func newTestStore() *Store {
 	s := NewStore()
 	s.CitasURL = ""
-	s.MedicamentosURL = ""
 	s.AlimentacionURL = ""
 	return s
 }
@@ -46,22 +45,6 @@ func TestCitasSimuladas_PacienteNoExiste(t *testing.T) {
 	citas := s.citasSimuladas("P999")
 	if len(citas) != 0 {
 		t.Errorf("Se esperaban 0 citas, se obtuvieron %d", len(citas))
-	}
-}
-
-func TestMedicamentosSimulados_P001(t *testing.T) {
-	s := newTestStore()
-	meds := s.medicamentosSimulados("P001")
-	if len(meds) != 2 {
-		t.Errorf("Se esperaban 2 medicamentos, se obtuvieron %d", len(meds))
-	}
-}
-
-func TestAdherenciaSimulada_P001(t *testing.T) {
-	s := newTestStore()
-	adh := s.adherenciaSimulada("P001")
-	if adh.Porcentaje != 85.7 {
-		t.Errorf("Se esperaba 85.7, se obtuvo %.1f", adh.Porcentaje)
 	}
 }
 
@@ -116,9 +99,8 @@ func TestCalcularEstadoGeneral_Estable(t *testing.T) {
 func TestGenerarRecomendacion_Buena(t *testing.T) {
 	s := newTestStore()
 	citas := models.ResumenCitas{TotalProgramadas: 2, Completadas: 2, Pendientes: 0}
-	meds := models.ResumenMedicamentos{PorcentajeAdherencia: 95.0, AlertasActivas: 0}
 	alim := models.ResumenAlimentacion{PorcentajeCumplido: 100.0, ComidasSaltadas: 0}
-	rec := s.generarRecomendacion(citas, meds, alim)
+	rec := s.generarRecomendacion(citas, alim)
 	if rec == "" {
 		t.Error("La recomendacion no deberia estar vacia")
 	}
@@ -127,9 +109,8 @@ func TestGenerarRecomendacion_Buena(t *testing.T) {
 func TestGenerarRecomendacion_Mala(t *testing.T) {
 	s := newTestStore()
 	citas := models.ResumenCitas{TotalProgramadas: 4, Completadas: 1, Pendientes: 3}
-	meds := models.ResumenMedicamentos{PorcentajeAdherencia: 30.0, AlertasActivas: 2}
 	alim := models.ResumenAlimentacion{PorcentajeCumplido: 40.0, ComidasSaltadas: 3}
-	rec := s.generarRecomendacion(citas, meds, alim)
+	rec := s.generarRecomendacion(citas, alim)
 	if rec == "" {
 		t.Error("La recomendacion no deberia estar vacia")
 	}

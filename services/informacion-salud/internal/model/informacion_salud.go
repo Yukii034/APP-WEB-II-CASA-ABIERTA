@@ -18,6 +18,7 @@ type InformacionSalud struct {
 // EntradaInformacionSalud es el body esperado en POST y PUT. En un PUT,
 // una lista nil indica que el campo no se debe modificar.
 type EntradaInformacionSalud struct {
+	PacienteID           string   `json:"paciente_id"`
 	NombrePaciente       string   `json:"nombre_paciente"`
 	Diagnosticos         []string `json:"diagnosticos"`
 	Alergias             []string `json:"alergias"`
