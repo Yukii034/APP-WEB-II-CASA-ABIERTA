@@ -7,19 +7,28 @@ services:
       - PORT=8080
     networks:
       - cuidabien-net
-    # No necesita "ports" hacia afuera si solo lo usa el gateway,
-    # pero lo dejamos expuesto para poder probarlo directo mientras desarrollan
     ports:
       - "8081:8080"
 
+  informacion-salud:
+    build: ./services/informacion-salud
+    environment:
+      - PORT=8082
+    networks:
+      - cuidabien-net
+    ports:
+      - "8082:8080"
+
+  
   alimentacion:
     build: ./services/alimentacion
     environment:
       - PORT=8080
+      - DESAYUNO_HASTA=10:00
+      - ALMUERZO_HASTA=15:00
+      - CENA_HASTA=21:00
     networks:
       - cuidabien-net
-    # No necesita "ports" hacia afuera si solo lo usa el gateway,
-    # pero lo dejamos expuesto para poder probarlo directo mientras desarrollan
     ports:
       - "8084:8080"
 
@@ -27,10 +36,76 @@ services:
     build: ./services/citas
     environment:
       - PORT=8080
+      - INFORMACION_SALUD_URL=http://informacion-salud:8082
+    networks:
+      - cuidabien-net
+    depends_on:
+      - informacion-salud
+    ports:
+      - "8085:8080"
+
+  reportes:
+    build: ./services/reportes
+    environment:
+      - PORT=8080
+      - CITAS_URL=http://citas:8080
+      - MEDICAMENTOS_URL=http://medicamentos:8080
+      - ALIMENTACION_URL=http://alimentacion:8080
+    depends_on:
+      - citas
+      - medicamentos
+      - alimentacion
     networks:
       - cuidabien-net
     ports:
-      - "8085:8080"
+      - "8088:8080"
+
+  estado-animo:
+    build: ./services/estado-animo
+    environment:
+      - PORT=8080
+    networks:
+      - cuidabien-net
+    ports:
+      - "8087:8080"
+
+  reportes-medicos:
+    build: ./services/reportes-medicos
+    environment:
+      - PORT=8080
+      - CITAS_URL=http://citas:8080
+    networks:
+      - cuidabien-net
+    ports:
+      - "8086:8080"
+  
+  recordatorios-medicamentos:
+    build: ./services/recordatorios-medicamentos
+    environment:
+      - PORT=8080
+      - TIMEZONE=America/Guayaquil
+    ports:
+      - "8089:8080"
+    networks:
+      - cuidabien-net
+
+  actividad-fisica:
+    build: ./services/actividad-fisica
+    environment:
+      - PORT=8080
+    networks:
+      - cuidabien-net
+    ports:
+      - "8090:8080"
+
+  contacto-emergencia:
+    build: ./services/contacto-emergencia
+    environment:
+      - PORT=8080
+    networks:
+      - cuidabien-net
+    ports:
+      - "8097:8080"
 
   monitoreo-signos-vitales:
     build:
@@ -52,13 +127,29 @@ services:
       - MEDICAMENTOS_URL=http://medicamentos:8080
       - CITAS_URL=http://citas:8080
       - MONITOREO_SIGNOS_VITALES_URL=http://monitoreo-signos-vitales:8080
+      - REPORTES_URL=http://reportes:8080
+      - ALIMENTACION_URL=http://alimentacion:8080
+      - INFORMACION_SALUD_URL=http://informacion-salud:8082
+      - RECORDATORIOS_MEDICAMENTOS_URL=http://recordatorios-medicamentos:8080
+      - ESTADO_ANIMO_URL=http://estado-animo:8080
+      - REPORTES_MEDICOS_URL=http://reportes-medicos:8080
+      - CONTACTO_EMERGENCIA_URL=http://contacto-emergencia:8080
+      - ACTIVIDAD_FISICA_URL=http://actividad-fisica:8080
       # Aquí se van agregando las URLs de los demás servicios:
       # - EMERGENCIA_URL=http://emergencia:8080
       # - MONITOREO_URL=http://monitoreo:8080
     depends_on:
       - medicamentos
+      - informacion-salud
       - citas
       - monitoreo-signos-vitales
+      - reportes
+      - alimentacion
+      - estado-animo
+      - reportes-medicos
+      - recordatorios-medicamentos
+      - contacto-emergencia
+      - actividad-fisica
     networks:
       - cuidabien-net
     ports:

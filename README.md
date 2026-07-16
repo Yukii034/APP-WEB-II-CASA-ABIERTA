@@ -87,12 +87,16 @@ Esto levanta todos los servicios definidos en `docker-compose.yml`. El gateway q
 | Servicio      | Puerto host | Estado |
 |---------------|-------------|--------|
 | gateway       | 8080        | ✅ activo |
-| medicamentos  | 8081        | ✅ activo |
 | informacion salud    | 8082        | ✅ activo |
-| Monitoreo signos vitales     | 8083        | activo ✅ |
+| monitoreo de signos vitales | 8083 | ✅ activo |
 | alimentacion   | 8084        | ✅ activo |
 | citas médicas | 8085        | ✅ activo |
-| ...           | 808X        | agregar aquí al sumar un servicio |
+| reportes médicos | 8086        | ✅ activo |
+| estado animo     | 8087 | ✅ activo |
+| reportes (equipo) | 8088 | ✅ activo |
+| Recordatorio de medicamentos | 8089 | ✅ activo |
+| actividad física | 8090 | ✅ activo |
+| contacto emergencia | 8097 | ✅ activo |
 
 > Antes de asignarte un puerto, revisa esta tabla y actualízala en tu PR para evitar choques con otro equipo.
 
@@ -136,8 +140,11 @@ cuidabien/
 | Servicio | Responsable(s) |
 |----------|----------------|
 | Gateway / base del repo | [Pierina Peñaherrera] |
-| Informacion de salud | [Nahim Simba] |
+| Informacion de salud | [Nahim Simba, Jostin Alvarado, Daivelyn Pincay, Joseph Paredes, Cristina Cedeño] |
 | Emergencia | [nombre] |
 | Alimentos | [Eduardo Lopez, Pierina Peñaherrera, José Manuel Castillo, Néstor Gallegos] |
-| Citas médicas | [Deimuzh] |
+| Reportes médicos | [Anthony Mendoza - Deimuz, Holguin Nathaly Jasmin, Cedeño Geovanny Alexander] |
+| Citas médicas | [Anthony Mendoza - Deimuz, Holguin Nathaly Jasmin, Cedeño Geovanny Alexander] |
+| Estado animo |  [Danny Zambrano, Michael Cedeño] |
+| Recordatorio de medicamentos | [Manuel Intriago, Madelyn Zambrano, Michelle Salazar] |
 | Monitoreo de signos vitales | [Anthony Macias, Winter Povea, Montecé Frank, Hector Fernandez] |

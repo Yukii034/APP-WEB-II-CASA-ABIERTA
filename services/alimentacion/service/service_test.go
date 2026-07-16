@@ -1,21 +1,23 @@
-package main
+package service
 
 import (
 	"testing"
 	"time"
+
+	"cuidabien/alimentacion/modelo"
 )
 
-func esperadas() []comidaEsperada {
-	return []comidaEsperada{
-		{tipo: "desayuno", horaLimite: "10:00"},
-		{tipo: "almuerzo", horaLimite: "15:00"},
-		{tipo: "cena", horaLimite: "21:00"},
+func esperadas() []modelo.ComidaEsperada {
+	return []modelo.ComidaEsperada{
+		{Tipo: "desayuno", HoraLimite: "10:00"},
+		{Tipo: "almuerzo", HoraLimite: "15:00"},
+		{Tipo: "cena", HoraLimite: "21:00"},
 	}
 }
 
 func TestResumenSinRegistrosAntesDeCualquierLimite(t *testing.T) {
 	ahora := time.Date(2026, 7, 12, 8, 0, 0, 0, time.Local)
-	r := calcularResumen([]RegistroComida{}, esperadas(), ahora)
+	r := calcularResumen([]modelo.RegistroComida{}, esperadas(), ahora)
 
 	if r.HaySaltadas {
 		t.Errorf("a las 8am ninguna comida debería estar saltada todavía")
@@ -27,7 +29,7 @@ func TestResumenSinRegistrosAntesDeCualquierLimite(t *testing.T) {
 
 func TestResumenDesayunoSaltado(t *testing.T) {
 	ahora := time.Date(2026, 7, 12, 11, 0, 0, 0, time.Local)
-	r := calcularResumen([]RegistroComida{}, esperadas(), ahora)
+	r := calcularResumen([]modelo.RegistroComida{}, esperadas(), ahora)
 
 	if !r.HaySaltadas {
 		t.Errorf("a las 11am sin desayuno registrado debería marcar saltada")
@@ -39,7 +41,7 @@ func TestResumenDesayunoSaltado(t *testing.T) {
 
 func TestResumenComidaRegistradaNoCuentaComoSaltada(t *testing.T) {
 	ahora := time.Date(2026, 7, 12, 11, 0, 0, 0, time.Local)
-	regs := []RegistroComida{
+	regs := []modelo.RegistroComida{
 		{ID: "1", TipoComida: "desayuno", Hora: ahora.Add(-2 * time.Hour)},
 	}
 	r := calcularResumen(regs, esperadas(), ahora)
@@ -54,7 +56,7 @@ func TestResumenComidaRegistradaNoCuentaComoSaltada(t *testing.T) {
 
 func TestNivelAlertaOkSinSaltadas(t *testing.T) {
 	ahora := time.Date(2026, 7, 12, 8, 0, 0, 0, time.Local)
-	r := calcularResumen([]RegistroComida{}, esperadas(), ahora)
+	r := calcularResumen([]modelo.RegistroComida{}, esperadas(), ahora)
 
 	if r.NivelAlerta != "ok" {
 		t.Errorf("esperaba nivel_alerta 'ok', obtuve %q", r.NivelAlerta)
@@ -63,7 +65,7 @@ func TestNivelAlertaOkSinSaltadas(t *testing.T) {
 
 func TestNivelAlertaAtencionConUnaSaltada(t *testing.T) {
 	ahora := time.Date(2026, 7, 12, 11, 0, 0, 0, time.Local)
-	r := calcularResumen([]RegistroComida{}, esperadas(), ahora)
+	r := calcularResumen([]modelo.RegistroComida{}, esperadas(), ahora)
 
 	if r.NivelAlerta != "atencion" {
 		t.Errorf("esperaba nivel_alerta 'atencion' con 1 comida saltada, obtuve %q", r.NivelAlerta)
@@ -72,7 +74,7 @@ func TestNivelAlertaAtencionConUnaSaltada(t *testing.T) {
 
 func TestNivelAlertaUrgenteConDosSaltadas(t *testing.T) {
 	ahora := time.Date(2026, 7, 12, 16, 0, 0, 0, time.Local)
-	r := calcularResumen([]RegistroComida{}, esperadas(), ahora)
+	r := calcularResumen([]modelo.RegistroComida{}, esperadas(), ahora)
 
 	if r.NivelAlerta != "urgente" {
 		t.Errorf("esperaba nivel_alerta 'urgente' con 2 comidas saltadas, obtuve %q", r.NivelAlerta)

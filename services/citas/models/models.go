@@ -26,6 +26,24 @@ type Cita struct {
 	NotasMedico string `json:"notas_medico"`
 }
 
+type InformacionSalud struct {
+	ID                   string   `json:"id"`
+	NombrePaciente       string   `json:"nombre_paciente,omitempty"`
+	Diagnosticos         []string `json:"diagnosticos"`
+	Alergias             []string `json:"alergias"`
+	EnfermedadesCronicas []string `json:"enfermedades_cronicas"`
+	AntecedentesMedicos  []string `json:"antecedentes_medicos"`
+}
+
+type DetalleCita struct {
+	Cita                  Cita              `json:"cita"`
+	Paciente              *Paciente         `json:"paciente"`
+	Doctor                *Doctor           `json:"doctor"`
+	InformacionSalud      *InformacionSalud `json:"informacion_salud,omitempty"`
+	InformacionSaludAviso string            `json:"informacion_salud_aviso,omitempty"`
+	InformacionSaludID    string            `json:"informacion_salud_id,omitempty"`
+}
+
 type EventoHistorial struct {
 	CitaID    string `json:"cita_id"`
 	Accion    string `json:"accion"`
