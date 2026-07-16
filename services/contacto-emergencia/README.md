@@ -2,7 +2,7 @@
 
 ## Responsable
 
-Equipo: Luis (Luisao)
+Equipo: Luis Litardo , stiven Soledispa, Ronnie Mera
 
 ## Que hace este servicio
 
@@ -20,7 +20,7 @@ Los datos se guardan en memoria, por lo que se reinician al reiniciar el servici
 
 Este servicio corre internamente en el puerto **8080** dentro del contenedor.
 
-Puerto expuesto al host: **8086**.
+Puerto expuesto al host: **8097**.
 
 ## Endpoints
 
@@ -52,7 +52,7 @@ Si `API_KEY` no esta configurada, el servicio permite peticiones sin autenticaci
 ## Ejemplo: crear un contacto
 
 ```bash
-curl -X POST http://localhost:8086/api/contacts \
+curl -X POST http://localhost:8097/api/contacts \
   -H "Content-Type: application/json" \
   -d '{"paciente_id":"P001","nombre":"Sofia Garcia","telefono":"555-0102","parentesco":"Hija","prioridad":1,"principal":true}'
 ```
@@ -60,7 +60,7 @@ curl -X POST http://localhost:8086/api/contacts \
 ## Ejemplo: activar una alerta de emergencia
 
 ```bash
-curl -X POST http://localhost:8086/api/alerts \
+curl -X POST http://localhost:8097/api/alerts \
   -H "Content-Type: application/json" \
   -d '{"paciente_id":"P001","mensaje":"Caida detectada en la sala","nivel":"critico"}'
 ```
