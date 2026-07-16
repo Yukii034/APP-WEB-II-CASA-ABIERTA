@@ -1,13 +1,22 @@
 package main
 
-// main.go
-//
-// Punto de entrada del Microservicio de Monitoreo de Signos Vitales.
-//
-// TASK-001: Estructura inicial creada.
-// La inicialización real del servidor, inyección de dependencias y
-// conexión a PostgreSQL se implementarán en TASK-033 y TASK-034,
-// conforme a la Etapa 9 definida en SPEC.md.
-func main() {
+import (
+	"log"
+	"net/http"
 
+	"monitoreo-signos-vitales/internal/config"
+	"monitoreo-signos-vitales/internal/handlers"
+	"monitoreo-signos-vitales/internal/httpserver"
+	"monitoreo-signos-vitales/internal/service"
+	"monitoreo-signos-vitales/internal/storage"
+)
+
+func main() {
+	repo := storage.NuevaMemoriaRepository()
+	storage.Sembrar(repo)
+	servicio := service.NuevoSignosVitalesService(repo)
+	router := httpserver.NuevoRouter(handlers.NuevoSignosVitalesHandler(servicio))
+	puerto := config.Puerto()
+	log.Printf("Monitoreo de signos vitales escuchando en el puerto %s", puerto)
+	log.Fatal(http.ListenAndServe(":"+puerto, router))
 }
