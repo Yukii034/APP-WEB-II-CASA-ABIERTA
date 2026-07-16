@@ -152,5 +152,5 @@ cuidabien/
 | Citas médicas | [Anthony Mendoza - Deimuz, Holguin Nathaly Jasmin - NathalyLucas11, Cedeño Geovanny Alexander - alex167j] |
 | Estado animo | [Danny Zambrano, Michael Cedeño] |
 | Recordatorio de medicamentos | Manuel Intriago, Madelyn Zambrano, Michelle Salazar |
-| Actividad física | Melanie Anchundia, Libesth Aray |
+| Actividad física | [Melanie Anchundia, Libesth Aray] |
 | Contacto emergencia | [nombre del equipo] |
