@@ -7,8 +7,8 @@ Equipo: Zambrano Mera Danny : Cedeño Pincay Michael
 Registra diariamente el estado de ánimo del adulto mayor utilizando una escala numérica del 1 al 5, una etiqueta emocional y comentarios de texto opcionales. Cuenta con lógica interna capaz de emitir alertas si se registra un decaimiento anímico persistente en los últimos dos días.
 
 ## Puerto
-Este servicio corre internamente en el puerto **8080** (dentro del contenedor).
-Puerto expuesto al host: **8085**
+Este servicio corre internamente en el puerto *8080* (dentro del contenedor).
+Puerto expuesto al host: *8087*
 
 ## Endpoints
 
@@ -25,14 +25,43 @@ Puerto expuesto al host: **8085**
 |----------|-------------|---------|
 | PORT     | Puerto interno del servicio | 8080 |
 
-## Cómo correrlo solo (sin docker-compose)
+## Pruebas de Endpoints (Manuales)
+Puedes probar manualmente el flujo del servicio ejecutando estos comandos en tu terminal:
 
-```bash
+### 1. Health Check
+bash
+curl -X GET http://localhost:8087/health
+
+### 2. Obtener historial
+
+curl -X GET http://localhost:8087/api/estado-animo
+
+
+### 3. Registrar Estado de Ánimo (POST)
+
+curl -X POST http://localhost:8087/api/estado-animo \
+     -H "Content-Type: application/json" \
+     -d '{"nivel": 1, "emocion": "Triste", "comentario": "Me siento muy desanimado"}'
+
+
+### 4. Consultar Activación de Alertas
+
+curl -X GET http://localhost:8087/api/estado-animo/alertas
+
+
+### 5. Pruebas Unitarias (Automáticas)
+
+go test ./...
+
+
+## 6. Cómo correrlo solo (sin docker-compose)
+
+bash
 cd services/estado-animo
 go run main.go
 
 
-## Cómo correrlo solo con docker-compose
+## 7. Cómo correrlo solo con docker-compose
 
 docker build -t estado-animo .
-docker run -p 8085:8080 estado-animo
+docker run -p 8087:8080 estado-animo
